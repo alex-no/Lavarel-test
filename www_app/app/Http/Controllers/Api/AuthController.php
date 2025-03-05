@@ -65,6 +65,33 @@ class AuthController extends Controller
         return response()->json(['user' => $user], 201);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/login",
+     *     summary="User login",
+     *     description="Authenticate user and return a JWT token",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username","password"},
+     *             @OA\Property(property="username", type="string", example="user@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful login",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string", example="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials"
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->json()->all(), [
