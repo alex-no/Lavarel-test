@@ -21,7 +21,7 @@ class AuthController extends Controller
      * @OA\Post(
      *     path="/api/register",
      *     summary="Register a new user",
-     *     tags={"Auth"},
+     *     tags={"Register"},
      *     description="Creates a new user and returns the data",
      *     @OA\RequestBody(
      *         required=true,
@@ -77,7 +77,7 @@ class AuthController extends Controller
      *     path="/api/login",
      *     summary="User login",
      *     description="Authenticate user and return a JWT token",
-     *     tags={"Authentication"},
+     *     tags={"Login"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -148,7 +148,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Вы не авторизованы'], 400);
+        }
+        $user->tokens()->delete();
         return response()->json(['message' => 'Вы вышли из системы'], 200);
     }
 }

@@ -9,7 +9,7 @@
         "/api/register": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "Register"
                 ],
                 "summary": "Register a new user",
                 "description": "Creates a new user and returns the data",
@@ -82,7 +82,7 @@
         "/api/login": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Login"
                 ],
                 "summary": "User login",
                 "description": "Authenticate user and return a JWT token",
@@ -194,12 +194,12 @@
     },
     "tags": [
         {
-            "name": "Auth",
-            "description": "Auth"
+            "name": "Register",
+            "description": "Register"
         },
         {
-            "name": "Authentication",
-            "description": "Authentication"
+            "name": "Login",
+            "description": "Login"
         },
         {
             "name": "Logout",

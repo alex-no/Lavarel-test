@@ -21,7 +21,7 @@ Route::get('/logout', [AuthController::class, 'logout']);
 //     Route::post('/logout', [AuthController::class, 'logout']);
 // });
 
-// Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 // Route::middleware([\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, 'auth:sanctum'])
 //     ->get('/user', function (Request $request) {
