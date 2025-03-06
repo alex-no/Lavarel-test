@@ -8,7 +8,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-
+/**
+ * @OA\Info(
+ *     title="API Documentation",
+ *     version="1.0.0",
+ *     description="This is the API documentation for the Laravel application."
+ * )
+ */
 class AuthController extends Controller
 {
     /**
@@ -16,6 +22,7 @@ class AuthController extends Controller
      *     path="/api/register",
      *     summary="Register a new user",
      *     tags={"Auth"},
+     *     description="Creates a new user and returns the data",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -67,7 +74,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/login",
+     *     path="/api/login",
      *     summary="User login",
      *     description="Authenticate user and return a JWT token",
      *     tags={"Authentication"},
@@ -118,37 +125,15 @@ class AuthController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/resource",
-     *     summary="Retrieve a list of resources",
-     *     description="Returns a list of resources from the database.",
-     *     operationId="getResources",
-     *     tags={"Resources"},
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number for pagination",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="integer",
-     *             example=1
-     *         )
-     *     ),
-     *     @OA\Parameter(
-     *         name="limit",
-     *         in="query",
-     *         description="Number of items per page",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="integer",
-     *             example=10
-     *         )
-     *     ),
+     *     path="/api/logout",
+     *     summary="User logout",
+     *     description="User logout.",
+     *     tags={"Logout"},
      *     @OA\Response(
      *         response=200,
-     *         description="Successful response",
+     *         description="Successful logout",
      *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/Resource")
+     *             @OA\Property(property="message", type="string", example="Вы успешно вышли")
      *         )
      *     ),
      *     @OA\Response(
