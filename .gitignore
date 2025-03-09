@@ -29,3 +29,4 @@ Homestead.json
 .phpactor.json
 auth.json
 /www_app/public/pi.php
+/doc/*.bak
