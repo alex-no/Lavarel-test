@@ -30,3 +30,5 @@ Homestead.json
 auth.json
 /www_app/public/pi.php
 /doc/*.bak
+/bak
+/doc/~$CribsLaravel.xlsx

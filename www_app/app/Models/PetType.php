@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PetType extends Model
 {
+    protected $table = 'pet_type'; // Specify the table explicitly
+
     /** @use HasFactory<\Database\Factories\PetTypeFactory> */
     use HasFactory;
 }

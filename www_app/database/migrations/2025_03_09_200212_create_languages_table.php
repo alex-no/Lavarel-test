@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('language', function (Blueprint $table) {
-            $table->string('code')->primary(); // Используем code как Primary Key
-            $table->string('short_name');  
-            $table->string('full_name');  
-            $table->boolean('is_enabled')->default(true); 
-            $table->timestamps();
+            $table->string('code', 2)->primary(); // Используем code как Primary Key
+            $table->string('short_name', 3);  
+            $table->string('full_name', 32);  
+            $table->boolean('is_enabled')->default(true);
+            $table->tinyInteger('order');
+            // $table->timestamps();
         });
     }
 

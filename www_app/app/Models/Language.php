@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Language extends Model
 {
+    protected $table = 'language'; // Specify the table explicitly
+
     /** @use HasFactory<\Database\Factories\LanguageFactory> */
     use HasFactory;
 }

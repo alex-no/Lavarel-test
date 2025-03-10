@@ -13,10 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->group('web', [
-            \App\Http\Middleware\SetLocale::class, // Middleware для web
+            \App\Http\Middleware\SetLocale::class, // Middleware for web
         ]);
         $middleware->group('api', [
-            \App\Http\Middleware\SetLocale::class, // Middleware для API
+            \App\Http\Middleware\SetLocale::class, // Middleware for API
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
