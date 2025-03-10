@@ -12,7 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->group('web', [
+            \App\Http\Middleware\SetLocale::class, // Middleware для web
+        ]);
+        $middleware->group('api', [
+            \App\Http\Middleware\SetLocale::class, // Middleware для API
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
