@@ -63,7 +63,7 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
-            'table' => 'user', // Specify the table name explicitly
+            'table' => 'users', // Specify the table name explicitly
         ],
 
         // 'users' => [

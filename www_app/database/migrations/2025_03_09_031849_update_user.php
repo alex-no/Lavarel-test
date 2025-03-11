@@ -17,15 +17,15 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-ALTER TABLE `session` 
+ALTER TABLE `sessions` 
 DROP INDEX `session_user_id_index`,
 DROP COLUMN `user_id`;
 
-ALTER TABLE `session` 
+ALTER TABLE `sessions` 
 ADD COLUMN `user_id` BIGINT(19) UNSIGNED NULL DEFAULT NULL AFTER `id`,
 ADD INDEX `fk_user_id_idx` (`user_id` ASC);
 
-ALTER TABLE `user` 
+ALTER TABLE `users` 
 ADD COLUMN `phone` VARCHAR(16) NULL DEFAULT NULL AFTER `password`;
 
 
@@ -42,18 +42,18 @@ SQL;
      */
     public function down(): void
     {
-        Schema::table('session', function (Blueprint $table) {
+        Schema::table('sessions', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropIndex(['fk_user_id_idx']);
             $table->dropColumn('user_id');
         });
 
-        Schema::table('session', function (Blueprint $table) {
+        Schema::table('sessions', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->nullable()->after('id');
             $table->index('user_id', 'session_user_id_index');
         });
 
-        Schema::table('user', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('phone');
         });
 

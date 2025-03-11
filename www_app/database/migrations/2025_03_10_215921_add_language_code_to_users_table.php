@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user', function (Blueprint $table) {
-            $table->string('language_code')->nullable()->after('remember_token');
-            $table->foreign('language_code')->references('code')->on('language')->onDelete('set null');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('language_code')->nullable()->after('id');
+            $table->foreign('language_code')->references('code')->on('languages')->onDelete('set null');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('user', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['language_code']);
             $table->dropColumn('language_code');
         });

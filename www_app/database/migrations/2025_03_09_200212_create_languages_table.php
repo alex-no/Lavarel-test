@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('language', function (Blueprint $table) {
+        Schema::create('languages', function (Blueprint $table) {
             $table->string('code', 2)->primary(); // Используем code как Primary Key
             $table->string('short_name', 3);  
             $table->string('full_name', 32);  
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('language');
+        Schema::dropIfExists('languages');
     }
 };

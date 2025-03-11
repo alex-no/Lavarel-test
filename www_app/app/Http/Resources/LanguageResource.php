@@ -14,7 +14,6 @@ class LanguageResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // return parent::toArray($request);
         return [
             'code' => $this->code,
             'short_name' => $this->short_name,
