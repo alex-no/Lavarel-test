@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('full_name', 32);  
             $table->boolean('is_enabled')->default(true);
             $table->tinyInteger('order');
-            // $table->timestamps();
         });
     }
 
