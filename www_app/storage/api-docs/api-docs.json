@@ -174,7 +174,7 @@
                 "tags": [
                     "PetTypes"
                 ],
-                "summary": "Get list of pet types",
+                "summary": "Get list of Pet Types",
                 "operationId": "f7c75ad6326bb9c3251720f9243e618b",
                 "responses": {
                     "200": {
@@ -210,6 +210,84 @@
                     },
                     "404": {
                         "description": "Not Found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "PetTypes"
+                ],
+                "summary": "Store a new Pet Type",
+                "description": "Creates a new Pet Type and stores it in the database.",
+                "operationId": "storePetTypes",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_uk": {
+                                        "description": "Name of the created Pet Type in Ukrainian",
+                                        "type": "string"
+                                    },
+                                    "name_en": {
+                                        "description": "Name of the created Pet Type in English",
+                                        "type": "string"
+                                    },
+                                    "name_ru": {
+                                        "description": "Name of the created Pet Type in Russian",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pet Type created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the created Pet Type",
+                                            "type": "integer"
+                                        },
+                                        "name_uk": {
+                                            "description": "Name of the created Pet Type in Ukrainian",
+                                            "type": "string"
+                                        },
+                                        "name_en": {
+                                            "description": "Name of the created Pet Type in English",
+                                            "type": "string"
+                                        },
+                                        "name_ru": {
+                                            "description": "Name of the created Pet Type in Russian",
+                                            "type": "string"
+                                        },
+                                        "updated_at": {
+                                            "description": "Date and time of the last update",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "created_at": {
+                                            "description": "Date and time of the creation",
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
                     }
                 }
             }

@@ -21,12 +21,9 @@ use App\Models\PetType;
 class PetTypeController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    /**
      * @OA\Get(
      *     path="/api/pet-types",
-     *     summary="Get list of pet types",
+     *     summary="Get list of Pet Types",
      *     tags={"PetTypes"},
      *     @OA\Response(
      *         response=200,
@@ -61,7 +58,79 @@ class PetTypeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/pet-types",
+     *     summary="Store a new Pet Type",
+     *     description="Creates a new Pet Type and stores it in the database.",
+     *     operationId="storePetTypes",
+     *     tags={"PetTypes"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="name_uk",
+     *                 type="string",
+     *                 description="Name of the created Pet Type in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_en",
+     *                 type="string",
+     *                 description="Name of the created Pet Type in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ru",
+     *                 type="string",
+     *                 description="Name of the created Pet Type in Russian"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Pet Type created successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 description="ID of the created Pet Type"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_uk",
+     *                 type="string",
+     *                 description="Name of the created Pet Type in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_en",
+     *                 type="string",
+     *                 description="Name of the created Pet Type in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ru",
+     *                 type="string",
+     *                 description="Name of the created Pet Type in Russian"
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="datetime",
+     *                 description="Date and time of the last update"
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="datetime",
+     *                 description="Date and time of the creation"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
