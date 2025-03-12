@@ -7,7 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DatabaseController;
-use \Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\Api\PetTypeController;
+use App\Http\Controllers\Api\PetBreedController;
+use App\Http\Controllers\Api\PetOwnerController;
+use Illuminate\Database\Eloquent\Model;
 
 //Route::apiResource('languages', LanguageController::class);
 Route::get('/languages', [LanguageController::class, 'index']);
@@ -56,5 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
 //     ->get('/user', function (Request $request) {
 //         return $request->user();
 //     });
+
+Route::apiResource('/pet-type', PetTypeController::class);
+Route::apiResource('/pet-breed', PetBreedController::class);
+Route::apiResource('/pet-owner', PetOwnerController::class);
 
 Route::get('/check-db', [DatabaseController::class, 'checkDatabaseConnection']);

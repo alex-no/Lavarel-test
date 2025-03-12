@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\PetTypeResource;
-use App\Models\PetType;
+use App\Http\Resources\PetOwnerResource;
+use App\Models\PetOwner;
 
-class PetTypeController extends Controller
+class PetOwnerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return PetTypeResource::collection(PetType::all());
+        return PetOwnerResource::collection(PetOwner::all());
     }
 
     /**

@@ -4,17 +4,24 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\PetTypeResource;
-use App\Models\PetType;
+use App\Http\Resources\PetBreedResource;
+use App\Models\PetBreed;
 
-class PetTypeController extends Controller
+class PetBreedController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return PetTypeResource::collection(PetType::all());
+        $request->validate([
+            'pet_type_id' => 'required|exists:pet_types,id',
+        ]);
+
+        $query = PetBreed::query();
+        $query->where('pet_type_id', $request->pet_type_id);
+
+        return PetBreedResource::collection($query->get());
     }
 
     /**
