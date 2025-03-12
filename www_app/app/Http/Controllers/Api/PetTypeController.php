@@ -14,7 +14,7 @@ use App\Models\PetType;
  * )
  * @OA\Schema(
  *     schema="PetType",
- *     title="Pet Type",
+ *     title="PetTypes",
  *     description="Типы животных",
  * )
  */
@@ -227,7 +227,111 @@ class PetTypeController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/resource/{id}",
+     *     summary="Update an existing Pet Type",
+     *     description="Updates the details of an existing Pet Type by its ID.",
+     *     operationId="updateResource",
+     *     tags={"PetTypes"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the Pet Type to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="name_uk",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the updated Pet Type in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_en",
+     *                 type="string",
+     *                 example="dog",
+     *                 description="Name of the updated Pet Type in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ru",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the updated Pet Type in Russian"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resource updated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the updated Pet Type"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_uk",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the updated Pet Type in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_en",
+     *                 type="string",
+     *                 example="dog",
+     *                 description="Name of the updated Pet Type in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ru",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the updated Pet Type in Russian"
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the last update"
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the creation"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Resource not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string"
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function update(Request $request, string $id)
     {

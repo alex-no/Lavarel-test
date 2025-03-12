@@ -304,13 +304,13 @@
                 }
             }
         },
-        "/api/resource/{id}": {
+        "/api/pet-types/{id}": {
             "get": {
                 "tags": [
                     "PetTypes"
                 ],
                 "summary": "Retrieve a specific resource by ID",
-                "operationId": "9699da0c69d1ee11373e23c76cf1f3f6",
+                "operationId": "ef62c7993df1e5da8dbcd076dcf10cc0",
                 "parameters": [
                     {
                         "name": "id",
@@ -372,6 +372,130 @@
                     }
                 }
             }
+        },
+        "/api/resource/{id}": {
+            "put": {
+                "tags": [
+                    "PetTypes"
+                ],
+                "summary": "Update an existing Pet Type",
+                "description": "Updates the details of an existing Pet Type by its ID.",
+                "operationId": "updateResource",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Pet Type to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_uk": {
+                                        "description": "Name of the updated Pet Type in Ukrainian",
+                                        "type": "string",
+                                        "example": "собака"
+                                    },
+                                    "name_en": {
+                                        "description": "Name of the updated Pet Type in English",
+                                        "type": "string",
+                                        "example": "dog"
+                                    },
+                                    "name_ru": {
+                                        "description": "Name of the updated Pet Type in Russian",
+                                        "type": "string",
+                                        "example": "собака"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resource updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the updated Pet Type",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name_uk": {
+                                            "description": "Name of the updated Pet Type in Ukrainian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "name_en": {
+                                            "description": "Name of the updated Pet Type in English",
+                                            "type": "string",
+                                            "example": "dog"
+                                        },
+                                        "name_ru": {
+                                            "description": "Name of the updated Pet Type in Russian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "updated_at": {
+                                            "description": "Date and time of the last update",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        },
+                                        "created_at": {
+                                            "description": "Date and time of the creation",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -394,7 +518,7 @@
                 "type": "object"
             },
             "PetType": {
-                "title": "Pet Type",
+                "title": "PetTypes",
                 "description": "Типы животных"
             },
             "User": {
