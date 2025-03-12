@@ -169,6 +169,401 @@
                 }
             }
         },
+        "/api/pet-breeds": {
+            "get": {
+                "tags": [
+                    "PetBreeds"
+                ],
+                "summary": "Get list of Pet Breeds",
+                "operationId": "718fea5037700adc791569d16e8476e3",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": "1"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "собака"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-03-12T20:08:04.566Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "PetBreeds"
+                ],
+                "summary": "Store a new Pet Breed",
+                "description": "Creates a new Pet Breed and stores it in the database.",
+                "operationId": "storePetBreeds",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_uk": {
+                                        "description": "Name of the created Pet Breed in Ukrainian",
+                                        "type": "string",
+                                        "example": "собака"
+                                    },
+                                    "name_en": {
+                                        "description": "Name of the created Pet Breed in English",
+                                        "type": "string",
+                                        "example": "dog"
+                                    },
+                                    "name_ru": {
+                                        "description": "Name of the created Pet Breed in Russian",
+                                        "type": "string",
+                                        "example": "собака"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pet Breed created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the created Pet Breed",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name_uk": {
+                                            "description": "Name of the created Pet Breed in Ukrainian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "name_en": {
+                                            "description": "Name of the created Pet Breed in English",
+                                            "type": "string",
+                                            "example": "dog"
+                                        },
+                                        "name_ru": {
+                                            "description": "Name of the created Pet Breed in Russian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "updated_at": {
+                                            "description": "Date and time of the last update",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        },
+                                        "created_at": {
+                                            "description": "Date and time of the creation",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/pet-breeds/{id}": {
+            "get": {
+                "tags": [
+                    "PetBreeds"
+                ],
+                "summary": "Retrieve a specific resource by ID",
+                "operationId": "a32a5a21420a87f6d6816cc8c456e862",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Pet Breed to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of the resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the requested Pet Breed",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name_uk": {
+                                            "description": "Name of the requested Pet Breed in Ukrainian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "name_en": {
+                                            "description": "Name of the requested Pet Breed in English",
+                                            "type": "string",
+                                            "example": "dog"
+                                        },
+                                        "name_ru": {
+                                            "description": "Name of the requested Pet Breed in Russian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "updated_at": {
+                                            "description": "Date and time of the last update",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        },
+                                        "created_at": {
+                                            "description": "Date and time of the creation",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "PetBreeds"
+                ],
+                "summary": "Update an existing Pet Breed",
+                "description": "Updates the details of an existing Pet Breed by its ID.",
+                "operationId": "updatePetBreed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Pet Breed to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name_uk": {
+                                        "description": "Name of the updated Pet Breed in Ukrainian",
+                                        "type": "string",
+                                        "example": "собака"
+                                    },
+                                    "name_en": {
+                                        "description": "Name of the updated Pet Breed in English",
+                                        "type": "string",
+                                        "example": "dog"
+                                    },
+                                    "name_ru": {
+                                        "description": "Name of the updated Pet Breed in Russian",
+                                        "type": "string",
+                                        "example": "собака"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resource updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the updated Pet Breed",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name_uk": {
+                                            "description": "Name of the updated Pet Breed in Ukrainian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "name_en": {
+                                            "description": "Name of the updated Pet Breed in English",
+                                            "type": "string",
+                                            "example": "dog"
+                                        },
+                                        "name_ru": {
+                                            "description": "Name of the updated Pet Breed in Russian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "updated_at": {
+                                            "description": "Date and time of the last update",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        },
+                                        "created_at": {
+                                            "description": "Date and time of the creation",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "PetBreeds"
+                ],
+                "summary": "Delete a Pet Breed",
+                "description": "Deletes a PetBreed by its ID",
+                "operationId": "destroyPetBreed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Pet Breed to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pet Breed deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Pet Breed deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Resource not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/pet-types": {
             "get": {
                 "tags": [
@@ -371,16 +766,14 @@
                         "description": "Resource not found"
                     }
                 }
-            }
-        },
-        "/api/resource/{id}": {
+            },
             "put": {
                 "tags": [
                     "PetTypes"
                 ],
                 "summary": "Update an existing Pet Type",
                 "description": "Updates the details of an existing Pet Type by its ID.",
-                "operationId": "updateResource",
+                "operationId": "updatePetType",
                 "parameters": [
                     {
                         "name": "id",
@@ -495,6 +888,75 @@
                         }
                     }
                 }
+            },
+            "delete": {
+                "tags": [
+                    "PetTypes"
+                ],
+                "summary": "Delete a Pet Type",
+                "description": "Deletes a PetType by its ID",
+                "operationId": "destroyPetType",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Pet Type to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pet Type deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Pet Type deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Resource not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Internal server error"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -516,6 +978,10 @@
                     }
                 },
                 "type": "object"
+            },
+            "PetBreed": {
+                "title": "PetBreeds",
+                "description": "Типы животных"
             },
             "PetType": {
                 "title": "PetTypes",
@@ -546,6 +1012,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "PetBreeds",
+            "description": "PetBreeds"
         },
         {
             "name": "PetTypes",

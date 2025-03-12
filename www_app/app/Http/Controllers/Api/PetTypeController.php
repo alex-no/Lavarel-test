@@ -228,10 +228,10 @@ class PetTypeController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/resource/{id}",
+     *     path="/api/pet-types/{id}",
      *     summary="Update an existing Pet Type",
      *     description="Updates the details of an existing Pet Type by its ID.",
-     *     operationId="updateResource",
+     *     operationId="updatePetType",
      *     tags={"PetTypes"},
      *     @OA\Parameter(
      *         name="id",
@@ -349,7 +349,55 @@ class PetTypeController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/pet-types/{id}",
+     *     summary="Delete a Pet Type",
+     *     description="Deletes a PetType by its ID",
+     *     operationId="destroyPetType",
+     *     tags={"PetTypes"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the Pet Type to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Pet Type deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Pet Type deleted successfully"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Resource not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Resource not found"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Internal server error"
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function destroy(string $id)
     {
