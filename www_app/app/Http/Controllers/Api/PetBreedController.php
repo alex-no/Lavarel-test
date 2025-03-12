@@ -24,6 +24,15 @@ use App\Models\PetBreed;
      *     path="/api/pet-breeds",
      *     summary="Get list of Pet Breeds",
      *     tags={"PetBreeds"},
+     *     @OA\Parameter(
+     *         name="pet_type_id",
+     *         in="query",
+     *         required=true,
+     *         description="ID of the Pet Type to filter breeds",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
@@ -32,7 +41,7 @@ use App\Models\PetBreed;
      *             @OA\Items(
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example="1"),
-     *                 @OA\Property(property="name", type="string", example="собака"),
+     *                 @OA\Property(property="name", type="string", example="Китайская хохлатая собака"),
      *                 @OA\Property(property="updated_at", type="datetime", example="2025-03-12T20:08:04.566Z")
      *             )
      *         )
@@ -77,19 +86,19 @@ use App\Models\PetBreed;
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайський чубатий собака",
      *                 description="Name of the created Pet Breed in Ukrainian"
      *             ),
      *             @OA\Property(
      *                 property="name_en",
      *                 type="string",
-     *                 example="dog",
+     *                 example="Chinese Crested Dog",
      *                 description="Name of the created Pet Breed in English"
      *             ),
      *             @OA\Property(
      *                 property="name_ru",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайская хохлатая собака",
      *                 description="Name of the created Pet Breed in Russian"
      *             )
      *         )
@@ -108,19 +117,19 @@ use App\Models\PetBreed;
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайський чубатий собака",
      *                 description="Name of the created Pet Breed in Ukrainian"
      *             ),
      *             @OA\Property(
      *                 property="name_en",
      *                 type="string",
-     *                 example="dog",
+     *                 example="Chinese Crested Dog",
      *                 description="Name of the created Pet Breed in English"
      *             ),
      *             @OA\Property(
      *                 property="name_ru",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайская хохлатая собака",
      *                 description="Name of the created Pet Breed in Russian"
      *             ),
      *             @OA\Property(
@@ -180,19 +189,19 @@ use App\Models\PetBreed;
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайський чубатий собака",
      *                 description="Name of the requested Pet Breed in Ukrainian"
      *             ),
      *             @OA\Property(
      *                 property="name_en",
      *                 type="string",
-     *                 example="dog",
+     *                 example="Chinese Crested Dog",
      *                 description="Name of the requested Pet Breed in English"
      *             ),
      *             @OA\Property(
      *                 property="name_ru",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайская хохлатая собака",
      *                 description="Name of the requested Pet Breed in Russian"
      *             ),
      *             @OA\Property(
@@ -243,19 +252,19 @@ use App\Models\PetBreed;
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайський чубатий собака",
      *                 description="Name of the updated Pet Breed in Ukrainian"
      *             ),
      *             @OA\Property(
      *                 property="name_en",
      *                 type="string",
-     *                 example="dog",
+     *                 example="Chinese Crested Dog",
      *                 description="Name of the updated Pet Breed in English"
      *             ),
      *             @OA\Property(
      *                 property="name_ru",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайская хохлатая собака",
      *                 description="Name of the updated Pet Breed in Russian"
      *             )
      *         )
@@ -274,19 +283,19 @@ use App\Models\PetBreed;
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайський чубатий собака",
      *                 description="Name of the updated Pet Breed in Ukrainian"
      *             ),
      *             @OA\Property(
      *                 property="name_en",
      *                 type="string",
-     *                 example="dog",
+     *                 example="Chinese Crested Dog",
      *                 description="Name of the updated Pet Breed in English"
      *             ),
      *             @OA\Property(
      *                 property="name_ru",
      *                 type="string",
-     *                 example="собака",
+     *                 example="Китайская хохлатая собака",
      *                 description="Name of the updated Pet Breed in Russian"
      *             ),
      *             @OA\Property(
