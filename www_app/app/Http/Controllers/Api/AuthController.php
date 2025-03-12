@@ -14,6 +14,17 @@ use Illuminate\Validation\ValidationException;
  *     version="1.0.0",
  *     description="This is the API documentation for the Laravel application."
  * )
+ * @OA\Tag(
+ *     name="Auth",
+ *     description="API for working with Authentication"
+ * )
+ * @OA\Schema(
+ *     schema="Auth",
+ *     title="Authentication",
+ *     description="Аутентификация",
+ *     @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+ *     @OA\Property(property="password", type="string", format="password", example="password123")
+ * )
  */
 class AuthController extends Controller
 {
