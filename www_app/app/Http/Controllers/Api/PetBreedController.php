@@ -17,7 +17,8 @@ use App\Models\PetBreed;
  *     title="PetBreeds",
  *     description="Типы животных",
  * )
- */class PetBreedController extends Controller
+ */
+class PetBreedController extends Controller
 {
     /**
      * @OA\Get(
@@ -84,6 +85,12 @@ use App\Models\PetBreed;
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
+     *                 property="pet_type_id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the Pet Type"
+     *             ),
+     *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
      *                 example="Китайський чубатий собака",
@@ -113,6 +120,12 @@ use App\Models\PetBreed;
      *                 type="integer",
      *                 example="1",
      *                 description="ID of the created Pet Breed"
+     *             ),
+     *             @OA\Property(
+     *                 property="pet_type_id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the Pet Type"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",
@@ -187,6 +200,12 @@ use App\Models\PetBreed;
      *                 description="ID of the requested Pet Breed"
      *             ),
      *             @OA\Property(
+     *                 property="pet_type_id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the Pet Type"
+     *             ),
+     *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
      *                 example="Китайський чубатий собака",
@@ -250,6 +269,12 @@ use App\Models\PetBreed;
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
+     *                 property="pet_type_id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the Pet Type"
+     *             ),
+     *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
      *                 example="Китайський чубатий собака",
@@ -279,6 +304,12 @@ use App\Models\PetBreed;
      *                 type="integer",
      *                 example="1",
      *                 description="ID of the updated Pet Breed"
+     *             ),
+     *             @OA\Property(
+     *                 property="pet_type_id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the Pet Type"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",

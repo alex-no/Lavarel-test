@@ -240,6 +240,11 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
+                                    "pet_type_id": {
+                                        "description": "ID of the Pet Type",
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
                                     "name_uk": {
                                         "description": "Name of the created Pet Breed in Ukrainian",
                                         "type": "string",
@@ -270,6 +275,11 @@
                                     "properties": {
                                         "id": {
                                             "description": "ID of the created Pet Breed",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "pet_type_id": {
+                                            "description": "ID of the Pet Type",
                                             "type": "integer",
                                             "example": "1"
                                         },
@@ -345,6 +355,11 @@
                                             "type": "integer",
                                             "example": "1"
                                         },
+                                        "pet_type_id": {
+                                            "description": "ID of the Pet Type",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
                                         "name_uk": {
                                             "description": "Name of the requested Pet Breed in Ukrainian",
                                             "type": "string",
@@ -407,6 +422,11 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
+                                    "pet_type_id": {
+                                        "description": "ID of the Pet Type",
+                                        "type": "integer",
+                                        "example": "1"
+                                    },
                                     "name_uk": {
                                         "description": "Name of the updated Pet Breed in Ukrainian",
                                         "type": "string",
@@ -437,6 +457,11 @@
                                     "properties": {
                                         "id": {
                                             "description": "ID of the updated Pet Breed",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "pet_type_id": {
+                                            "description": "ID of the Pet Type",
                                             "type": "integer",
                                             "example": "1"
                                         },
