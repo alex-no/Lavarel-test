@@ -32,9 +32,9 @@ class PetTypeController extends Controller
      *             type="array",
      *             @OA\Items(
      *                 type="object",
-     *                 @OA\Property(property="id", type="integer"),
-     *                 @OA\Property(property="name", type="string"),
-     *                 @OA\Property(property="updated_at", type="datetime")
+     *                 @OA\Property(property="id", type="integer", example="1"),
+     *                 @OA\Property(property="name", type="string", example="собака"),
+     *                 @OA\Property(property="updated_at", type="datetime", example="2025-03-12T20:08:04.566Z")
      *             )
      *         )
      *     ),
@@ -71,16 +71,19 @@ class PetTypeController extends Controller
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
+     *                 example="собака",
      *                 description="Name of the created Pet Type in Ukrainian"
      *             ),
      *             @OA\Property(
      *                 property="name_en",
      *                 type="string",
+     *                 example="dog",
      *                 description="Name of the created Pet Type in English"
      *             ),
      *             @OA\Property(
      *                 property="name_ru",
      *                 type="string",
+     *                 example="собака",
      *                 description="Name of the created Pet Type in Russian"
      *             )
      *         )
@@ -93,31 +96,37 @@ class PetTypeController extends Controller
      *             @OA\Property(
      *                 property="id",
      *                 type="integer",
+     *                 example="1",
      *                 description="ID of the created Pet Type"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
+     *                 example="собака",
      *                 description="Name of the created Pet Type in Ukrainian"
      *             ),
      *             @OA\Property(
      *                 property="name_en",
      *                 type="string",
+     *                 example="dog",
      *                 description="Name of the created Pet Type in English"
      *             ),
      *             @OA\Property(
      *                 property="name_ru",
      *                 type="string",
+     *                 example="собака",
      *                 description="Name of the created Pet Type in Russian"
      *             ),
      *             @OA\Property(
      *                 property="updated_at",
      *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
      *                 description="Date and time of the last update"
      *             ),
      *             @OA\Property(
      *                 property="created_at",
      *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
      *                 description="Date and time of the creation"
      *             )
      *         )
@@ -150,7 +159,67 @@ class PetTypeController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/pet-types/{id}",
+     *     summary="Retrieve a specific resource by ID",
+     *     tags={"PetTypes"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the Pet Type to retrieve",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of the resource",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the requested Pet Type"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_uk",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the requested Pet Type in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_en",
+     *                 type="string",
+     *                 example="dog",
+     *                 description="Name of the requested Pet Type in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ru",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the requested Pet Type in Russian"
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the last update"
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the creation"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Resource not found"
+     *     )
+     * )
      */
     public function show(string $id)
     {

@@ -32,7 +32,7 @@ class AuthController extends Controller
      * @OA\Post(
      *     path="/api/register",
      *     summary="Register a new user",
-     *     tags={"Register"},
+     *     tags={"Authentication"},
      *     description="Creates a new user and returns the data",
      *     @OA\RequestBody(
      *         required=true,
@@ -88,7 +88,7 @@ class AuthController extends Controller
      *     path="/api/login",
      *     summary="User login",
      *     description="Authenticate user and return a JWT token",
-     *     tags={"Login"},
+     *     tags={"Authentication"},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -139,7 +139,7 @@ class AuthController extends Controller
      *     path="/api/logout",
      *     summary="User logout",
      *     description="User logout.",
-     *     tags={"Logout"},
+     *     tags={"Authentication"},
      *     @OA\Response(
      *         response=200,
      *         description="Successful logout",

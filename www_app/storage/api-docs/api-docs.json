@@ -9,7 +9,7 @@
         "/api/register": {
             "post": {
                 "tags": [
-                    "Register"
+                    "Authentication"
                 ],
                 "summary": "Register a new user",
                 "description": "Creates a new user and returns the data",
@@ -82,7 +82,7 @@
         "/api/login": {
             "post": {
                 "tags": [
-                    "Login"
+                    "Authentication"
                 ],
                 "summary": "User login",
                 "description": "Authenticate user and return a JWT token",
@@ -138,7 +138,7 @@
         "/api/logout": {
             "get": {
                 "tags": [
-                    "Logout"
+                    "Authentication"
                 ],
                 "summary": "User logout",
                 "description": "User logout.",
@@ -186,14 +186,17 @@
                                     "items": {
                                         "properties": {
                                             "id": {
-                                                "type": "integer"
+                                                "type": "integer",
+                                                "example": "1"
                                             },
                                             "name": {
-                                                "type": "string"
+                                                "type": "string",
+                                                "example": "собака"
                                             },
                                             "updated_at": {
                                                 "type": "string",
-                                                "format": "date-time"
+                                                "format": "date-time",
+                                                "example": "2025-03-12T20:08:04.566Z"
                                             }
                                         },
                                         "type": "object"
@@ -228,15 +231,18 @@
                                 "properties": {
                                     "name_uk": {
                                         "description": "Name of the created Pet Type in Ukrainian",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "собака"
                                     },
                                     "name_en": {
                                         "description": "Name of the created Pet Type in English",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "dog"
                                     },
                                     "name_ru": {
                                         "description": "Name of the created Pet Type in Russian",
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "собака"
                                     }
                                 },
                                 "type": "object"
@@ -253,29 +259,35 @@
                                     "properties": {
                                         "id": {
                                             "description": "ID of the created Pet Type",
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "example": "1"
                                         },
                                         "name_uk": {
                                             "description": "Name of the created Pet Type in Ukrainian",
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "собака"
                                         },
                                         "name_en": {
                                             "description": "Name of the created Pet Type in English",
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "dog"
                                         },
                                         "name_ru": {
                                             "description": "Name of the created Pet Type in Russian",
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "собака"
                                         },
                                         "updated_at": {
                                             "description": "Date and time of the last update",
                                             "type": "string",
-                                            "format": "date-time"
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
                                         },
                                         "created_at": {
                                             "description": "Date and time of the creation",
                                             "type": "string",
-                                            "format": "date-time"
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
                                         }
                                     },
                                     "type": "object"
@@ -288,6 +300,75 @@
                     },
                     "500": {
                         "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/api/resource/{id}": {
+            "get": {
+                "tags": [
+                    "PetTypes"
+                ],
+                "summary": "Retrieve a specific resource by ID",
+                "operationId": "9699da0c69d1ee11373e23c76cf1f3f6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Pet Type to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of the resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "ID of the requested Pet Type",
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name_uk": {
+                                            "description": "Name of the requested Pet Type in Ukrainian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "name_en": {
+                                            "description": "Name of the requested Pet Type in English",
+                                            "type": "string",
+                                            "example": "dog"
+                                        },
+                                        "name_ru": {
+                                            "description": "Name of the requested Pet Type in Russian",
+                                            "type": "string",
+                                            "example": "собака"
+                                        },
+                                        "updated_at": {
+                                            "description": "Date and time of the last update",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        },
+                                        "created_at": {
+                                            "description": "Date and time of the creation",
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-03-12T20:08:04.566Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Resource not found"
                     }
                 }
             }
@@ -339,16 +420,8 @@
     },
     "tags": [
         {
-            "name": "Register",
-            "description": "Register"
-        },
-        {
-            "name": "Login",
-            "description": "Login"
-        },
-        {
-            "name": "Logout",
-            "description": "Logout"
+            "name": "Authentication",
+            "description": "Authentication"
         },
         {
             "name": "PetTypes",
