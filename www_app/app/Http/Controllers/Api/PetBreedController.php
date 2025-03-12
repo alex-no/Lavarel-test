@@ -31,7 +31,10 @@ class PetBreedController extends Controller
      *         required=true,
      *         description="ID of the Pet Type to filter breeds",
      *         @OA\Schema(
-     *             type="integer"
+     *             type="integer",
+     *             format="int64",
+     *             example=1,
+     *             description="Must be a valid ID from the pet_types table"
      *         )
      *     ),
      *     @OA\Response(
@@ -271,6 +274,7 @@ class PetBreedController extends Controller
      *             @OA\Property(
      *                 property="pet_type_id",
      *                 type="integer",
+     *                 format="int64",
      *                 example="1",
      *                 description="ID of the Pet Type"
      *             ),
