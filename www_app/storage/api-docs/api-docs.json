@@ -242,6 +242,12 @@
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "pet_type_id",
+                                    "name_uk",
+                                    "name_en",
+                                    "name_ru"
+                                ],
                                 "properties": {
                                     "pet_type_id": {
                                         "description": "ID of the Pet Type",
@@ -663,6 +669,11 @@
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "name_uk",
+                                    "name_en",
+                                    "name_ru"
+                                ],
                                 "properties": {
                                     "name_uk": {
                                         "description": "Name of the created Pet Type in Ukrainian",

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PetTypeResource;
 use App\Models\PetType;
 
@@ -68,6 +69,7 @@ class PetTypeController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             type="object",
+     *             required={"name_uk", "name_en", "name_ru"},
      *             @OA\Property(
      *                 property="name_uk",
      *                 type="string",
@@ -143,19 +145,26 @@ class PetTypeController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->json()->all(), [
             'name_uk' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'name_ru' => 'required|string|max:255',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
         $petType = PetType::create([
-            'name_uk' => $request->input('name_uk'),
-            'name_en' => $request->input('name_en'),
-            'name_ru' => $request->input('name_ru'),
+            'name_uk' => $request->json('name_uk'),
+            'name_en' => $request->json('name_en'),
+            'name_ru' => $request->json('name_ru'),
         ]);
 
-        return new PetTypeResource($petType);
+        return response()->json([
+            'message' => 'Pet type created successfully',
+            'data' => $petType,
+        ]);
     }
 
     /**
@@ -335,17 +344,28 @@ class PetTypeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->json()->all(), [
             'name_uk' => 'sometimes|string|max:255',
             'name_en' => 'sometimes|string|max:255',
             'name_ru' => 'sometimes|string|max:255',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
         $petType = PetType::findOrFail($id);
 
-        $petType->update($request->only(['name_uk', 'name_en', 'name_ru']));
+        $validData = $validator->validated();
 
-        return new PetTypeResource($petType);
+        if (!empty($validData)) {
+            $petType->update($validData);
+        }
+
+        return response()->json([
+            'message' => 'Pet type updated successfully',
+            'data' => $petType,
+        ]);
     }
 
     /**

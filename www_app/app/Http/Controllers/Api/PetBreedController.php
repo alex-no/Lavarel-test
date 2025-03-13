@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PetBreedResource;
 use App\Models\PetBreed;
 
@@ -29,7 +30,7 @@ class PetBreedController extends Controller
      *         name="pet_type_id",
      *         in="query",
      *         required=true,
-     *         description="ID of the Pet Type to filter breeds",
+     *         description="ID of the Pet Breed to filter breeds",
      *         @OA\Schema(
      *             type="integer",
      *             format="int64",
@@ -70,10 +71,13 @@ class PetBreedController extends Controller
             'pet_type_id' => 'required|exists:pet_types,id',
         ]);
 
-        $query = PetBreed::query();
-        $query->where('pet_type_id', $request->pet_type_id);
+        $petBreeds = PetBreed::query()
+        ->when($request->has('pet_type_id'), function ($query) use ($request) {
+            $query->where('pet_type_id', $request->pet_type_id);
+        })
+        ->paginate($request->get('per_page', 10)); // По умолчанию 10 записей на страницу
 
-        return PetBreedResource::collection($query->get());
+        return PetBreedResource::collection($petBreeds);
     }
 
     /**
@@ -87,11 +91,12 @@ class PetBreedController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             type="object",
+     *             required={"pet_type_id", "name_uk", "name_en", "name_ru"},
      *             @OA\Property(
      *                 property="pet_type_id",
      *                 type="integer",
      *                 example="1",
-     *                 description="ID of the Pet Type"
+     *                 description="ID of the Pet Breed"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",
@@ -128,7 +133,7 @@ class PetBreedController extends Controller
      *                 property="pet_type_id",
      *                 type="integer",
      *                 example="1",
-     *                 description="ID of the Pet Type"
+     *                 description="ID of the Pet Breed"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",
@@ -174,7 +179,28 @@ class PetBreedController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->json()->all(), [
+            'pet_type_id' => 'required|exists:pet_types,id',
+            'name_uk' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'name_ru' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $petBreed = PetBreed::create([
+            'pet_type_id' => $request->json('pet_type_id'),
+            'name_uk' => $request->json('name_uk'),
+            'name_en' => $request->json('name_en'),
+            'name_ru' => $request->json('name_ru'),
+        ]);
+
+        return response()->json([
+            'message' => 'Pet Breed created successfully',
+            'data' => $petBreed,
+        ]);
     }
 
     /**
@@ -206,7 +232,7 @@ class PetBreedController extends Controller
      *                 property="pet_type_id",
      *                 type="integer",
      *                 example="1",
-     *                 description="ID of the Pet Type"
+     *                 description="ID of the Pet Breed"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",
@@ -242,13 +268,13 @@ class PetBreedController extends Controller
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Resource not found"
+     *         description="Pet Breed not found"
      *     )
      * )
      */
     public function show(string $id)
     {
-        //
+        return PetBreed::findOrFail($id);
     }
 
     /**
@@ -276,7 +302,7 @@ class PetBreedController extends Controller
      *                 type="integer",
      *                 format="int64",
      *                 example="1",
-     *                 description="ID of the Pet Type"
+     *                 description="ID of the Pet Breed"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",
@@ -300,7 +326,7 @@ class PetBreedController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Resource updated successfully",
+     *         description="Pet Breed updated successfully",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(
@@ -313,7 +339,7 @@ class PetBreedController extends Controller
      *                 property="pet_type_id",
      *                 type="integer",
      *                 example="1",
-     *                 description="ID of the Pet Type"
+     *                 description="ID of the Pet Breed"
      *             ),
      *             @OA\Property(
      *                 property="name_uk",
@@ -373,7 +399,29 @@ class PetBreedController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->json()->all(), [
+            'pet_type_id' => 'sometimes|exists:pet_types,id',
+            'name_uk' => 'sometimes|string|max:255',
+            'name_en' => 'sometimes|string|max:255',
+            'name_ru' => 'sometimes|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $petBreed = PetBreed::findOrFail($id);
+
+        $validData = $validator->validated();
+
+        if (!empty($validData)) {
+            $petBreed->update($validData);
+        }
+
+        return response()->json([
+            'message' => 'Pet breed updated successfully',
+            'data' => $petBreed,
+        ]);
     }
 
     /**
@@ -429,6 +477,9 @@ class PetBreedController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $petBreed = PetBreed::findOrFail($id);
+        $petBreed->delete();
+
+        return response()->json(null, 204);
     }
 }

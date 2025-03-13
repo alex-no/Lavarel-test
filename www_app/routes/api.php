@@ -60,8 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
 //         return $request->user();
 //     });
 
-Route::apiResource('/pet-type', PetTypeController::class);
-Route::apiResource('/pet-breed', PetBreedController::class);
-Route::apiResource('/pet-owner', PetOwnerController::class);
+Route::apiResource('/pet-types', PetTypeController::class);
+Route::apiResource('/pet-breeds', PetBreedController::class);
+Route::apiResource('/pet-owners', PetOwnerController::class);
 
 Route::get('/check-db', [DatabaseController::class, 'checkDatabaseConnection']);
