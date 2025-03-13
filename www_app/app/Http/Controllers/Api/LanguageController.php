@@ -141,6 +141,8 @@ class LanguageController extends Controller
             'code' => 'required|string|max:2',
             'short_name' => 'required|string|max:3',
             'full_name' => 'required|string|max:255',
+            'is_enabled' => 'sometimes|boolean',
+            'order' => 'sometimes|integer',
         ]);
 
         if ($validator->fails()) {
@@ -151,6 +153,8 @@ class LanguageController extends Controller
             'code' => $request->json('code'),
             'short_name' => $request->json('short_name'),
             'full_name' => $request->json('full_name'),
+            'is_enabled' => $request->json('is_enabled', true),
+            'order' => $request->json('order', 10),
         ]);
 
         return response()->json([
@@ -164,7 +168,7 @@ class LanguageController extends Controller
      */
     public function show(string $code)
     {
-        //
+        return Language::findOrFail($code);
     }
 
     /**
@@ -172,7 +176,30 @@ class LanguageController extends Controller
      */
     public function update(Request $request, string $code)
     {
-        //
+        $validator = Validator::make($request->json()->all(), [
+            'code' => 'sometimes|string|max:2',
+            'short_name' => 'sometimes|string|max:3',
+            'full_name' => 'sometimes|string|max:255',
+            'is_enabled' => 'sometimes|boolean',
+            'order' => 'sometimes|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
+
+        $language = Language::findOrFail($code);
+
+        $validData = $validator->validated();
+
+        if (!empty($validData)) {
+            $language->update($validData);
+        }
+
+        return response()->json([
+            'message' => 'Language updated successfully',
+            'data' => $language,
+        ]);
     }
 
 }
