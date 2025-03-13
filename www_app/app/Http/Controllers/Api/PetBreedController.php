@@ -27,6 +27,26 @@ class PetBreedController extends Controller
      *     summary="Get list of Pet Breeds",
      *     tags={"PetBreeds"},
      *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         required=false,
+     *         description="Page number for pagination",
+     *         @OA\Schema(
+     *             type="integer",
+     *             example=1
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         required=false,
+     *         description="Number of items per page for pagination",
+     *         @OA\Schema(
+     *             type="integer",
+     *             example=10
+     *         )
+     *     ),
+     *     @OA\Parameter(
      *         name="pet_type_id",
      *         in="query",
      *         required=true,

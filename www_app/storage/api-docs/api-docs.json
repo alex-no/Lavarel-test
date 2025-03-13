@@ -178,9 +178,29 @@
                 "operationId": "718fea5037700adc791569d16e8476e3",
                 "parameters": [
                     {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
                         "name": "pet_type_id",
                         "in": "query",
-                        "description": "ID of the Pet Type to filter breeds",
+                        "description": "ID of the Pet Breed to filter breeds",
                         "required": true,
                         "schema": {
                             "description": "Must be a valid ID from the pet_types table",
@@ -250,7 +270,7 @@
                                 ],
                                 "properties": {
                                     "pet_type_id": {
-                                        "description": "ID of the Pet Type",
+                                        "description": "ID of the Pet Breed",
                                         "type": "integer",
                                         "example": "1"
                                     },
@@ -288,7 +308,7 @@
                                             "example": "1"
                                         },
                                         "pet_type_id": {
-                                            "description": "ID of the Pet Type",
+                                            "description": "ID of the Pet Breed",
                                             "type": "integer",
                                             "example": "1"
                                         },
@@ -365,7 +385,7 @@
                                             "example": "1"
                                         },
                                         "pet_type_id": {
-                                            "description": "ID of the Pet Type",
+                                            "description": "ID of the Pet Breed",
                                             "type": "integer",
                                             "example": "1"
                                         },
@@ -403,7 +423,7 @@
                         }
                     },
                     "404": {
-                        "description": "Resource not found"
+                        "description": "Pet Breed not found"
                     }
                 }
             },
@@ -432,7 +452,7 @@
                             "schema": {
                                 "properties": {
                                     "pet_type_id": {
-                                        "description": "ID of the Pet Type",
+                                        "description": "ID of the Pet Breed",
                                         "type": "integer",
                                         "format": "int64",
                                         "example": "1"
@@ -460,7 +480,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Resource updated successfully",
+                        "description": "Pet Breed updated successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -471,7 +491,7 @@
                                             "example": "1"
                                         },
                                         "pet_type_id": {
-                                            "description": "ID of the Pet Type",
+                                            "description": "ID of the Pet Breed",
                                             "type": "integer",
                                             "example": "1"
                                         },
