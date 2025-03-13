@@ -76,10 +76,6 @@ class PetBreedController extends Controller
      *         description="Unauthorized"
      *     ),
      *     @OA\Response(
-     *         response=403,
-     *         description="Forbidden"
-     *     ),
-     *     @OA\Response(
      *         response=404,
      *         description="Not Found"
      *     )
