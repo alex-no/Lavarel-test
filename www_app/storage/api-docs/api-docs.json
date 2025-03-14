@@ -34,6 +34,11 @@
                                         "format": "email",
                                         "example": "john.doe@example.com"
                                     },
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "phone",
+                                        "example": "+380667147444"
+                                    },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
@@ -1375,6 +1380,7 @@
                 "tags": [
                     "Languages"
                 ],
+                "summary": "Set the current language by header",
                 "operationId": "0e9c2e8fc2455638a0e9d9391b47ce59",
                 "parameters": [
                     {
@@ -1400,6 +1406,7 @@
                 "tags": [
                     "Languages"
                 ],
+                "summary": "Set the current language by header",
                 "operationId": "e3148d2a7ac6cc809490d4a417f8e836",
                 "parameters": [
                     {
@@ -1425,6 +1432,7 @@
                 "tags": [
                     "Languages"
                 ],
+                "summary": "Set the current language by header",
                 "operationId": "80df2f7efeb567a4fcd2695b1a04e0cc",
                 "parameters": [
                     {

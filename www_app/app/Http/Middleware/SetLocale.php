@@ -30,6 +30,7 @@ class SetLocale
     /**
      * @OA\Get(
      *     path="/api/{any}",
+     *     summary="Set the current language by header",
      *     tags={"Languages"},
      *     @OA\Parameter(
      *         name="any",
@@ -49,6 +50,7 @@ class SetLocale
     /**
      * @OA\Post(
      *     path="/api/{any}",
+     *     summary="Set the current language by header",
      *     tags={"Languages"},
      *     @OA\Parameter(
      *         name="any",
@@ -68,6 +70,7 @@ class SetLocale
     /**
      * @OA\Put(
      *     path="/api/{any}",
+     *     summary="Set the current language by header",
      *     tags={"Languages"},
      *     @OA\Parameter(
      *         name="any",

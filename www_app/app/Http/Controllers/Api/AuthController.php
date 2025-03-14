@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+
 /**
  * @OA\Info(
  *     title="API Documentation",
@@ -40,6 +42,7 @@ class AuthController extends Controller
      *             required={"name","email","password"},
      *             @OA\Property(property="name", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
+     *             @OA\Property(property="phone", type="string", format="phone", example="+380667147444"),
      *             @OA\Property(property="password", type="string", format="password", example="password123"),
      *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
      *         )
@@ -48,7 +51,7 @@ class AuthController extends Controller
      *         response=201,
      *         description="User registered successfully",
      *         @OA\JsonContent(
-     *             @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *             @OA\Property(property="users", type="object", ref="#/components/schemas/User"),
      *             @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...")
      *         )
      *     ),
@@ -66,7 +69,8 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->json()->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:user',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'sometimes|string|max:16',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -75,12 +79,14 @@ class AuthController extends Controller
         }
 
         $user = User::create([
+            'language_code' => App::getLocale(),
             'name' => $request->json('name'),
             'email' => $request->json('email'),
+            'phone' => preg_replace('/[^0-9+]/', '', $request->json('phone')),
             'password' => Hash::make($request->json('password')),
         ]);
 
-        return response()->json(['user' => $user], 201);
+        return response()->json(['users' => $user], 201);
     }
 
     /**
