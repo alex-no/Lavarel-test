@@ -164,7 +164,62 @@ class LanguageController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/languages/{code}",
+     *     summary="Retrieve a specific resource by Code",
+     *     tags={"Languages"},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         description="Сode of the Language to show",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="en"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of the resource",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="code",
+     *                 type="string",
+     *                 example="en",
+     *                 description="Code of updated Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="short_name",
+     *                 type="string",
+     *                 example="Eng",
+     *                 description="Short name of updated Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="full_name",
+     *                 type="string",
+     *                 example="English",
+     *                 description="Full name of updated Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="is_enabled",
+     *                 type="boolean",
+     *                 example=true,
+     *                 description="Is enabled Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="order",
+     *                 type="integer",
+     *                 example=1,
+     *                 description="Order of Language"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Language not found"
+     *     )
+     * )
      */
     public function show(string $code)
     {

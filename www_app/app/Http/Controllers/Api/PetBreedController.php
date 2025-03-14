@@ -228,7 +228,7 @@ class PetBreedController extends Controller
      *         name="id",
      *         in="path",
      *         required=true,
-     *         description="ID of the Pet Breed to retrieve",
+     *         description="ID of the Pet Breed to show",
      *         @OA\Schema(
      *             type="integer"
      *         )

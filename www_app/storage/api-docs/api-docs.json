@@ -309,6 +309,67 @@
             }
         },
         "/api/languages/{code}": {
+            "get": {
+                "tags": [
+                    "Languages"
+                ],
+                "summary": "Retrieve a specific resource by Code",
+                "operationId": "b81e018383db76335e35c4141ba7ddd9",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Сode of the Language to show",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "en"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful retrieval of the resource",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "Code of updated Language",
+                                            "type": "string",
+                                            "example": "en"
+                                        },
+                                        "short_name": {
+                                            "description": "Short name of updated Language",
+                                            "type": "string",
+                                            "example": "Eng"
+                                        },
+                                        "full_name": {
+                                            "description": "Full name of updated Language",
+                                            "type": "string",
+                                            "example": "English"
+                                        },
+                                        "is_enabled": {
+                                            "description": "Is enabled Language",
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "order": {
+                                            "description": "Order of Language",
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Language not found"
+                    }
+                }
+            },
             "put": {
                 "tags": [
                     "Languages"
@@ -620,7 +681,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of the Pet Breed to retrieve",
+                        "description": "ID of the Pet Breed to show",
                         "required": true,
                         "schema": {
                             "type": "integer"
