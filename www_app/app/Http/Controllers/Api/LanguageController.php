@@ -172,7 +172,115 @@ class LanguageController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/languages/{code}",
+     *     summary="Update an existing Language",
+     *     description="Updates the details of an existing Language by its Сode.",
+     *     operationId="updateLanguage",
+     *     tags={"Languages"},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         description="Сode of the Language to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string",
+     *             example="en"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="code",
+     *                 type="string",
+     *                 example="en",
+     *                 description="Code of Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="short_name",
+     *                 type="string",
+     *                 example="Eng",
+     *                 description="Short name of Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="full_name",
+     *                 type="string",
+     *                 example="English",
+     *                 description="Full name of Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="is_enabled",
+     *                 type="boolean",
+     *                 example=true,
+     *                 description="Is enabled Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="order",
+     *                 type="integer",
+     *                 example=1,
+     *                 description="Order of Language"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Languages updated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="code",
+     *                 type="string",
+     *                 example="en",
+     *                 description="Code of updated Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="short_name",
+     *                 type="string",
+     *                 example="Eng",
+     *                 description="Short name of updated Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="full_name",
+     *                 type="string",
+     *                 example="English",
+     *                 description="Full name of updated Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="is_enabled",
+     *                 type="boolean",
+     *                 example=true,
+     *                 description="Is enabled Language"
+     *             ),
+     *             @OA\Property(
+     *                 property="order",
+     *                 type="integer",
+     *                 example=1,
+     *                 description="Order of Language"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Bad request"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Resource not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
      */
     public function update(Request $request, string $code)
     {

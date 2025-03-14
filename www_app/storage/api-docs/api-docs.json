@@ -308,6 +308,125 @@
                 }
             }
         },
+        "/api/languages/{code}": {
+            "put": {
+                "tags": [
+                    "Languages"
+                ],
+                "summary": "Update an existing Language",
+                "description": "Updates the details of an existing Language by its Сode.",
+                "operationId": "updateLanguage",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Сode of the Language to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "en"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "code": {
+                                        "description": "Code of Language",
+                                        "type": "string",
+                                        "example": "en"
+                                    },
+                                    "short_name": {
+                                        "description": "Short name of Language",
+                                        "type": "string",
+                                        "example": "Eng"
+                                    },
+                                    "full_name": {
+                                        "description": "Full name of Language",
+                                        "type": "string",
+                                        "example": "English"
+                                    },
+                                    "is_enabled": {
+                                        "description": "Is enabled Language",
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "order": {
+                                        "description": "Order of Language",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Languages updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "description": "Code of updated Language",
+                                            "type": "string",
+                                            "example": "en"
+                                        },
+                                        "short_name": {
+                                            "description": "Short name of updated Language",
+                                            "type": "string",
+                                            "example": "Eng"
+                                        },
+                                        "full_name": {
+                                            "description": "Full name of updated Language",
+                                            "type": "string",
+                                            "example": "English"
+                                        },
+                                        "is_enabled": {
+                                            "description": "Is enabled Language",
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "order": {
+                                            "description": "Order of Language",
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
         "/api/pet-breeds": {
             "get": {
                 "tags": [
