@@ -11,14 +11,16 @@ use App\Models\Language;
 use Laravel\Sanctum\PersonalAccessToken;
 
 /**
- * @OA\Components(
- *     @OA\Parameter(
- *         parameter="AcceptLanguage",
- *         name="Accept-Language",
- *         in="header",
- *         required=true,
- *         @OA\Schema(type="string", example="en"),
- *         description="The language to set"
+ * @OA\OpenApi(
+ *     @OA\Components(
+ *         @OA\Parameter(
+ *             parameter="AcceptLanguage",
+ *             name="Accept-Language",
+ *             in="header",
+ *             required=false,
+ *             @OA\Schema(type="string", example="en"),
+ *             description="The language that will be set for any request"
+ *         )
  *     )
  * )
  */
@@ -27,31 +29,46 @@ class SetLocale
 {
     /**
      * @OA\Get(
-     *     path="/api/*",
+     *     path="/api/{any}",
      *     tags={"Languages"},
-     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguage"),
+     *     @OA\Parameter(
+     *         name="any",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Dynamic API path"
+     *     ),
      *     @OA\Response(response=200, description="Language set successfully"),
-     *     @OA\Response(response=400, description="Invalid language")
      * )
      */
 
     /**
      * @OA\Post(
-     *     path="/api/*",
+     *     path="/api/{any}",
      *     tags={"Languages"},
-     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguage"),
+     *     @OA\Parameter(
+     *         name="any",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Dynamic API path"
+     *     ),
      *     @OA\Response(response=200, description="Language set successfully"),
-     *     @OA\Response(response=400, description="Invalid language")
      * )
      */
 
     /**
      * @OA\Put(
-     *     path="/api/*",
+     *     path="/api/{any}",
      *     tags={"Languages"},
-     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguage"),
+     *     @OA\Parameter(
+     *         name="any",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Dynamic API path"
+     *     ),
      *     @OA\Response(response=200, description="Language set successfully"),
-     *     @OA\Response(response=400, description="Invalid language")
      * )
      */
     public function handle(Request $request, Closure $next)

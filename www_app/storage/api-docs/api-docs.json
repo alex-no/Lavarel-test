@@ -1343,23 +1343,26 @@
                 }
             }
         },
-        "/api/*": {
+        "/api/{any}": {
             "put": {
                 "tags": [
                     "Languages"
                 ],
-                "operationId": "81f0fd3af21621bbf4f17fd7373fa3c3",
+                "operationId": "8f0a46709fb39a201befebaebf49f2c7",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/AcceptLanguage"
+                        "name": "any",
+                        "in": "path",
+                        "description": "Dynamic API path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "Language set successfully"
-                    },
-                    "400": {
-                        "description": "Invalid language"
                     }
                 }
             }
@@ -1416,8 +1419,8 @@
             "AcceptLanguage": {
                 "name": "Accept-Language",
                 "in": "header",
-                "description": "The language to set",
-                "required": true,
+                "description": "The language that will be set for any request",
+                "required": false,
                 "schema": {
                     "type": "string",
                     "example": "en"
