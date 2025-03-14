@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 use App\Http\Resources\PetOwnerResource;
 use App\Models\PetOwner;
 
+/**
+ * @OA\Tag(
+ *     name="PetOwner",
+ *     description="API for working with Pet Owners"
+ * )
+ * @OA\Schema(
+ *     schema="PetOwner",
+ *     title="PetOwners",
+ *     description="Владельцы животных",
+ * )
+ */
 class PetOwnerController extends Controller
 {
     /**

@@ -16,7 +16,7 @@ use App\Models\PetBreed;
  * @OA\Schema(
  *     schema="PetBreed",
  *     title="PetBreeds",
- *     description="Типы животных",
+ *     description="Породы животных",
  * )
  */
 class PetBreedController extends Controller
