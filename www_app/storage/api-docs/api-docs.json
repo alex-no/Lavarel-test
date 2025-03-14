@@ -488,6 +488,33 @@
                 }
             }
         },
+        "/api/current-language": {
+            "get": {
+                "tags": [
+                    "Languages"
+                ],
+                "summary": "Get the current language",
+                "operationId": "6998f6afb64809bd9fc2758e0546829c",
+                "responses": {
+                    "200": {
+                        "description": "Current language",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "language": {
+                                            "type": "string",
+                                            "example": "en"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/pet-breeds": {
             "get": {
                 "tags": [
@@ -1344,11 +1371,11 @@
             }
         },
         "/api/{any}": {
-            "put": {
+            "get": {
                 "tags": [
                     "Languages"
                 ],
-                "operationId": "8f0a46709fb39a201befebaebf49f2c7",
+                "operationId": "0e9c2e8fc2455638a0e9d9391b47ce59",
                 "parameters": [
                     {
                         "name": "any",
@@ -1358,6 +1385,59 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Language set successfully"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Languages"
+                ],
+                "operationId": "e3148d2a7ac6cc809490d4a417f8e836",
+                "parameters": [
+                    {
+                        "name": "any",
+                        "in": "path",
+                        "description": "Dynamic API path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Language set successfully"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Languages"
+                ],
+                "operationId": "80df2f7efeb567a4fcd2695b1a04e0cc",
+                "parameters": [
+                    {
+                        "name": "any",
+                        "in": "path",
+                        "description": "Dynamic API path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
                     }
                 ],
                 "responses": {

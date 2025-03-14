@@ -38,9 +38,13 @@ class SetLocale
      *         @OA\Schema(type="string"),
      *         description="Dynamic API path"
      *     ),
+     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguage"),
      *     @OA\Response(response=200, description="Language set successfully"),
      * )
      */
+    public function getLanguage()
+    {
+    }
 
     /**
      * @OA\Post(
@@ -53,9 +57,13 @@ class SetLocale
      *         @OA\Schema(type="string"),
      *         description="Dynamic API path"
      *     ),
+     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguage"),
      *     @OA\Response(response=200, description="Language set successfully"),
      * )
      */
+    public function postLanguage()
+    {
+    }
 
     /**
      * @OA\Put(
@@ -68,9 +76,14 @@ class SetLocale
      *         @OA\Schema(type="string"),
      *         description="Dynamic API path"
      *     ),
+     *     @OA\Parameter(ref="#/components/parameters/AcceptLanguage"),
      *     @OA\Response(response=200, description="Language set successfully"),
      * )
      */
+    public function putLanguage()
+    {
+    }
+    
     public function handle(Request $request, Closure $next)
     {
         // Load the list of available languages from the database

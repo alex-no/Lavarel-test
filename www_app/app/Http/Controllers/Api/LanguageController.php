@@ -7,7 +7,7 @@ use App\Http\Resources\LanguageResource;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\App;
 
 class LanguageController extends Controller
 {
@@ -363,6 +363,27 @@ class LanguageController extends Controller
             'message' => 'Language updated successfully',
             'data' => $language,
         ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/current-language",
+     *     summary="Get the current language",
+     *     tags={"Languages"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Current language",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="language", type="string", example="en")
+     *         )
+     *     )
+     * )
+     */
+    public function getCurrentLanguage()
+    {
+        $language = App::getLocale();
+        return response()->json(['language' => $language]);
     }
 
 }

@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\AuthController;
@@ -16,13 +15,8 @@ use Illuminate\Database\Eloquent\Model;
 Route::get('/languages', [LanguageController::class, 'index']);
 Route::get('/languages/{language}', [LanguageController::class, 'show']);
 Route::post('/languages', [LanguageController::class, 'store']);
-// Route::put('/languages/{language}', [LanguageController::class, 'update']);
 Route::match(['put', 'patch'], '/languages/{language}', [LanguageController::class, 'update']);
-
-Route::get('/current-language', function (Request $request) {
-    $language = App::getLocale();
-    return response()->json(['language' =>$language]);
-});
+Route::get('/current-language', [LanguageController::class, 'getCurrentLanguage']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
