@@ -1342,6 +1342,27 @@
                     }
                 }
             }
+        },
+        "/api/*": {
+            "put": {
+                "tags": [
+                    "Languages"
+                ],
+                "operationId": "81f0fd3af21621bbf4f17fd7373fa3c3",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Language set successfully"
+                    },
+                    "400": {
+                        "description": "Invalid language"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1389,6 +1410,18 @@
                     }
                 },
                 "type": "object"
+            }
+        },
+        "parameters": {
+            "AcceptLanguage": {
+                "name": "Accept-Language",
+                "in": "header",
+                "description": "The language to set",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "en"
+                }
             }
         }
     },
