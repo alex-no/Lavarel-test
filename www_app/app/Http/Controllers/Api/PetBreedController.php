@@ -91,7 +91,7 @@ class PetBreedController extends Controller
         ->when($request->has('pet_type_id'), function ($query) use ($request) {
             $query->where('pet_type_id', $request->pet_type_id);
         })
-        ->paginate($request->get('per_page', 10)); // По умолчанию 10 записей на страницу
+        ->paginate($request->get('per_page', 10)); // Default 10 records per page
 
         return PetBreedResource::collection($petBreeds);
     }

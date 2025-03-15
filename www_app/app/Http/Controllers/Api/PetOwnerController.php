@@ -134,7 +134,7 @@ class PetOwnerController extends Controller
                 $query->where('user_id', $request->user_id);
             });
         }
-        $result = $petOwner->paginate($request->get('per_page', 10)); // По умолчанию 10 записей на страницу
+        $result = $petOwner->paginate($request->get('per_page', 10)); // Default 10 records per page
 
         return PetOwnerResource::collection($result);
     }
