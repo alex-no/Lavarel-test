@@ -18,7 +18,7 @@ class PetOwnerResource extends JsonResource
         $language = App::getLocale();
         return [
             'id' => $this->id,
-            'users_id' => $this->users_id,
+            'user_id' => $this->user_id,
             'owner' => $this->user->name,
 
             'pet_type_id' => $this->pet_type_id,
@@ -26,7 +26,7 @@ class PetOwnerResource extends JsonResource
 
             'pet_breed_id' => $this->pet_breed_id,
             'breed' => $this->petBreed->{'name_' . $language},
-            
+
             'nickname' => $this->{'nickname_' . $language},
             'year_of_birth' => $this->year_of_birth,
             'age' => date('Y') - $this->year_of_birth,

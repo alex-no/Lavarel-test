@@ -23,13 +23,13 @@ DROP INDEX `sessions_user_id_index` ;
 
 ALTER TABLE `sessions` 
 ADD COLUMN `user_id` BIGINT(19) UNSIGNED NULL DEFAULT NULL AFTER `id`,
-ADD INDEX `fk_users_id_idx` (`user_id` ASC);
+ADD INDEX `fk_user_id_idx` (`user_id` ASC);
 
 ALTER TABLE `users` 
 ADD COLUMN `phone` VARCHAR(16) NULL DEFAULT NULL AFTER `password`;
 
 ALTER TABLE `sessions` 
-ADD CONSTRAINT `fk_users_id`
+ADD CONSTRAINT `fk_user_id`
   FOREIGN KEY (`user_id`)
   REFERENCES `users` (`id`)
   ON DELETE CASCADE

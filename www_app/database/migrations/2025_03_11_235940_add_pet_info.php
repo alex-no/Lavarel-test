@@ -50,7 +50,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `pet_owners` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `users_id` BIGINT(19) UNSIGNED NOT NULL,
+  `user_id` BIGINT(19) UNSIGNED NOT NULL,
   `pet_type_id` INT(10) UNSIGNED NOT NULL,
   `pet_breed_id` INT(10) UNSIGNED NULL DEFAULT NULL,
   `nickname_uk` VARCHAR(255) NULL DEFAULT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `pet_owners` (
   PRIMARY KEY (`id`),
   INDEX `fk_pet_type_id2_idx` (`pet_type_id` ASC),
   INDEX `fk_pet_breed_id1_idx` (`pet_breed_id` ASC),
-  INDEX `fk_users_id1_idx` (`users_id` ASC),
+  INDEX `fk_user_id1_idx` (`user_id` ASC),
   CONSTRAINT `fk_pet_breed_id1`
     FOREIGN KEY (`pet_breed_id`)
     REFERENCES `pet_breeds` (`id`)
@@ -73,8 +73,8 @@ CREATE TABLE IF NOT EXISTS `pet_owners` (
     REFERENCES `pet_types` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_users_id1`
-    FOREIGN KEY (`users_id`)
+  CONSTRAINT `fk_user_id1`
+    FOREIGN KEY (`user_id`)
     REFERENCES `users` (`id`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE)
