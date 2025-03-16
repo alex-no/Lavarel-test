@@ -20,6 +20,7 @@ Route::get('/current-language', [LanguageController::class, 'getCurrentLanguage'
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout']);
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -29,8 +30,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
-    Route::get('/logout', [AuthController::class, 'logout']);
 
     Route::patch('/users', function (Request $request) {
         $request->validate(['lang' => 'required|string|exists:language,code']);
@@ -56,6 +55,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::apiResource('/pet-types', PetTypeController::class);
 Route::apiResource('/pet-breeds', PetBreedController::class);
+// Route::get('/pet-breeds/{id}', [PetBreedController::class, 'show']);
+// Route::get('/pet-breeds/{petBreed}', [PetBreedController::class, 'show'])
+//     ->whereNumber('petBreed');
 Route::apiResource('/pet-owners', PetOwnerController::class);
 
 Route::get('/check-db', [DatabaseController::class, 'checkDatabaseConnection']);

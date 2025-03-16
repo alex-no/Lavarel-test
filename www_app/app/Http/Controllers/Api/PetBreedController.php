@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePetBreedRequest;
+use App\Http\Requests\UpdatePetBreedRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PetBreedResource;
@@ -193,7 +195,7 @@ class PetBreedController extends Controller
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(StorePetBreedRequest $request)
     {
         $validator = Validator::make($request->json()->all(), [
             'pet_type_id' => 'required|exists:pet_types,id',
@@ -288,9 +290,16 @@ class PetBreedController extends Controller
      *     )
      * )
      */
-    public function show(string $id)
+    // public function show(string $id)
+    // {
+    //     $petBreed = PetBreed::findOrFail($id);
+    //     return $petBreed;
+    // }
+    public function show(PetBreed $petBreed, string $id)
     {
-        return PetBreed::findOrFail($id);
+        $petBreed->find
+        dd($petBreed, $id);
+        return $petBreed;
     }
 
     /**
@@ -414,6 +423,7 @@ class PetBreedController extends Controller
      * )
      */
     public function update(Request $request, string $id)
+//    public function update(UpdatePetBreedRequest $request, PetBreed $petBreed)
     {
         $validator = Validator::make($request->json()->all(), [
             'pet_type_id' => 'sometimes|exists:pet_types,id',
@@ -440,58 +450,59 @@ class PetBreedController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/api/pet-breeds/{id}",
-     *     summary="Delete a Pet Breed",
-     *     description="Deletes a PetBreed by its ID",
-     *     operationId="destroyPetBreed",
-     *     tags={"PetBreeds"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="ID of the Pet Breed to delete",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Pet Breed deleted successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Pet Breed deleted successfully"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Resource not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="error",
-     *                 type="string",
-     *                 example="Resource not found"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="error",
-     *                 type="string",
-     *                 example="Internal server error"
-     *             )
-     *         )
-     *     )
-     * )
-     */
+/**
+* @OA\Delete(
+*     path="/api/pet-breeds/{id}",
+*     summary="Delete a Pet Breed",
+*     description="Deletes a PetBreed by its ID",
+*     operationId="destroyPetBreed",
+*     tags={"PetBreeds"},
+*     @OA\Parameter(
+*         name="id",
+*         in="path",
+*         description="ID of the Pet Breed to delete",
+*         required=true,
+*         @OA\Schema(
+*             type="integer"
+*         )
+*     ),
+*     @OA\Response(
+*         response=200,
+*         description="Pet Breed deleted successfully",
+*         @OA\JsonContent(
+*             @OA\Property(
+*                 property="message",
+*                 type="string",
+*                 example="Pet Breed deleted successfully"
+*             )
+*         )
+*     ),
+*     @OA\Response(
+*         response=404,
+*         description="Resource not found",
+*         @OA\JsonContent(
+*             @OA\Property(
+*                 property="error",
+*                 type="string",
+*                 example="Resource not found"
+*             )
+*         )
+*     ),
+*     @OA\Response(
+*         response=500,
+*         description="Internal server error",
+*         @OA\JsonContent(
+*             @OA\Property(
+*                 property="error",
+*                 type="string",
+*                 example="Internal server error"
+*             )
+*         )
+*     )
+* )
+*/
     public function destroy(string $id)
+    // public function destroy(PetBreed $petBreed)
     {
         $petBreed = PetBreed::findOrFail($id);
         $petBreed->delete();
