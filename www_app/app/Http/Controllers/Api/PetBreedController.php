@@ -297,8 +297,7 @@ class PetBreedController extends Controller
     // }
     public function show(PetBreed $petBreed, string $id)
     {
-        $petBreed->find
-        dd($petBreed, $id);
+        $petBreed = PetBreed::findOrFail($id);
         return $petBreed;
     }
 
