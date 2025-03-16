@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 
 class PetOwnerResource extends JsonResource
 {
@@ -30,7 +31,7 @@ class PetOwnerResource extends JsonResource
             'nickname' => $this->{'nickname_' . $language},
             'year_of_birth' => $this->year_of_birth,
             'age' => date('Y') - $this->year_of_birth,
-            'updated_at' => $this->updated_at,
+            'updated' => Carbon::parse($this->updated_at)->format('d.m.Y H:i'),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 
 class PetTypeResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class PetTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->{'name_' . $language},
-            'updated_at' => $this->updated_at,
+            'updated' => Carbon::parse($this->updated_at)->format('d.m.Y H:i'),
         ];
     }
 }

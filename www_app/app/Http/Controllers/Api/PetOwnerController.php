@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\PetOwnerResource;
-use App\Http\Requests\PetOwnerRequest;
+use App\Http\Requests\IndexPetOwnerRequest;
 use App\Models\PetOwner;
 
 /**
@@ -123,12 +123,8 @@ class PetOwnerController extends Controller
      *     )
      * )
      */
-    public function index(PetOwnerRequest $request)
+    public function index(IndexPetOwnerRequest $request)
     {
-        $request->validate([
-            'user_id' => 'sometimes|exists:users,id',
-        ]);
-
         $petOwner = PetOwner::query();
         if ($request->user_id) {
             $petOwner->when($request->has('user_id'), function ($query) use ($request) {
