@@ -3,13 +3,16 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DatabaseController;
 use App\Http\Controllers\Api\PetTypeController;
 use App\Http\Controllers\Api\PetBreedController;
 use App\Http\Controllers\Api\PetOwnerController;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\Auth\VerificationController;
 
 //Route::apiResource('languages', LanguageController::class);
 Route::get('/languages', [LanguageController::class, 'index']);
@@ -27,9 +30,16 @@ Route::get('/logout', [AuthController::class, 'logout']);
 // })->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
+    // Route for resending the verification email
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return response()->json(['message' => 'Verification link sent!']);
+    })->middleware(['throttle:6,1'])->name('verification.send');
+
+    // Route for getting user information
     Route::get('/user', function (Request $request) {
         return $request->user();
-    });
+    })->middleware('verified');
 
     Route::patch('/users', function (Request $request) {
         $request->validate(['lang' => 'required|string|exists:language,code']);
@@ -45,6 +55,10 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['message' => 'Language updated', 'language' => $user->language_code]);
     });
 });
+// Route for email verification
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
 
 // Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 

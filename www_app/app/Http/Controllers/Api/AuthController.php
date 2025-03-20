@@ -130,8 +130,14 @@ class AuthController extends Controller
         $user = User::where('email', $request->json('email'))->first();
 
         if (!$user || !Hash::check($request->json('password'), $user->password)) {
+            $language = App::getLocale();
+            $messages = [
+                'uk' => 'Невірні облікові дані',
+                'en' => 'Invalid credentials',
+                'ru' => 'Неверные учетные данные',
+            ];
             throw ValidationException::withMessages([
-                'email' => ['Неверные учетные данные'],
+                'email' => [$messages[$language] ?? $messages['uk']],
             ]);
         }
 
@@ -150,7 +156,7 @@ class AuthController extends Controller
      *         response=200,
      *         description="Successful logout",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Вы успешно вышли")
+     *             @OA\Property(property="message", type="string", example="You have logged out")
      *         )
      *     ),
      *     @OA\Response(
@@ -165,11 +171,22 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $language = App::getLocale();
         $user = $request->user();
         if (!$user) {
-            return response()->json(['message' => 'Вы не авторизованы'], 400);
+            $messages = [
+                'uk' => 'Ви не авторизовані',
+                'en' => 'You are not authorized',
+                'ru' => 'Вы не авторизованы'
+            ];
+            return response()->json(['message' => $messages[$language] ?? $messages['uk']], 400);
         }
         $user->tokens()->delete();
-        return response()->json(['message' => 'Вы вышли из системы'], 200);
+        $messages = [
+            'uk' => 'Ви вийшли з системи',
+            'en' => 'You have logged out',
+            'ru' => 'Вы вышли из системы'
+        ];
+        return response()->json(['message' => $messages[$language] ?? $messages['uk']], 200);
     }
 }
