@@ -157,7 +157,7 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Вы успешно вышли"
+                                            "example": "You have logged out"
                                         }
                                     },
                                     "type": "object"
