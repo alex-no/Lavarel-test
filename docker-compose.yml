@@ -9,7 +9,7 @@ services:
       - db
 
   web:
-    image: nginx:alpine
+    image: alex0no/laravel-nginx:latest
     container_name: laravel_web
     restart: unless-stopped
     ports:

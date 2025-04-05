@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MyTestMail;
 
 class DatabaseController extends Controller
 {
@@ -27,5 +29,17 @@ class DatabaseController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function checkEmailSend()
+    {
+        //$email = 'test@example.com';
+        $email = 'alex@4n.com.ua';
+        $name = 'Alex';
+        
+        Mail::to($email)->send(new MyTestMail($name));
+        return response()->json([
+            'message' => 'Email sent successfully'
+        ], 200);
     }
 }

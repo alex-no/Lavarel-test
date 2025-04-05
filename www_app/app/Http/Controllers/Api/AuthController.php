@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MyTestMail;
+// use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Info(
@@ -85,6 +88,8 @@ class AuthController extends Controller
             'phone' => preg_replace('/[^0-9+]/', '', $request->json('phone')),
             'password' => Hash::make($request->json('password')),
         ]);
+
+        Mail::to($user->email)->send(new MyTestMail($user->name));
 
         return response()->json(['users' => $user], 201);
     }
