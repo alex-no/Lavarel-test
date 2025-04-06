@@ -28,12 +28,6 @@ use Laravel\Sanctum\PersonalAccessToken;
 class SetLocale
 {
     /**
-     * @var bool
-     * Indicates whether the locale has been set.
-     */
-    private $localeIsSet = false;
-
-    /**
      * @OA\Get(
      *     path="/api/{any}",
      *     summary="Set the current language by header",
@@ -121,9 +115,7 @@ class SetLocale
             }
         }
     
-        // if (!$this->localeIsSet) {
-            App::setLocale($locale);
-        // }
+        App::setLocale($locale);
 
         // Save the language in the session
         Session::put('lang', $locale);
