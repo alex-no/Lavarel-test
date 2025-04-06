@@ -3,13 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class MyTestMail extends Mailable
+class ConfirmMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,13 +17,16 @@ class MyTestMail extends Mailable
      * @var string
      */
     public $name;
+    public $verifyUrl;
+
 
     /**
      * Create a new message instance.
      */
-    public function __construct($name = 'Guest')
+    public function __construct($name, $verifyUrl)
     {
         $this->name = $name;
+        $this->verifyUrl = $verifyUrl;
     }
 
     /**
@@ -43,7 +45,7 @@ class MyTestMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.test',
+            view: 'emails.confirm',
         );
     }
 
@@ -62,8 +64,8 @@ class MyTestMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Hello from Laravel!')
-                    ->view('emails.test');
+        return $this->subject('Confirm email')
+                    ->view('emails.confirm');
     }
 
     /**
@@ -71,7 +73,7 @@ class MyTestMail extends Mailable
      */
     public function render()
     {
-        return $this->view('emails.test')
+        return $this->view('emails.confirm')
                     ->with([
                         'name' => $this->name,
                     ]);

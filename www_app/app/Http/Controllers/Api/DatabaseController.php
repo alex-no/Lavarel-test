@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\MyTestMail;
+use App\Mail\ConfirmMail;
+use Illuminate\Support\Facades\URL;
+use Carbon\Carbon;
 
 class DatabaseController extends Controller
 {
@@ -36,8 +38,13 @@ class DatabaseController extends Controller
         //$email = 'test@example.com';
         $email = 'alex@4n.com.ua';
         $name = 'Alex';
-        
-        Mail::to($email)->send(new MyTestMail($name));
+        $verifyUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(60),
+            ['id' => 1, 'hash' => sha1('test')]
+        );
+
+        Mail::to($email)->send(new ConfirmMail($name, $verifyUrl));
         return response()->json([
             'message' => 'Email sent successfully'
         ], 200);

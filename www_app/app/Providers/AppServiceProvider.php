@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\MessageHelper;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +29,10 @@ class AppServiceProvider extends ServiceProvider
         
         // Disable automatic pluralization
         Model::preventAccessingMissingAttributes(false);
+
+        App::macro('getMessages', function (array $keys, ?string $locale = null) {
+            return MessageHelper::getMessages($keys, $locale);
+        });
+   
     }
 }

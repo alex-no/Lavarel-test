@@ -28,6 +28,12 @@ use Laravel\Sanctum\PersonalAccessToken;
 class SetLocale
 {
     /**
+     * @var bool
+     * Indicates whether the locale has been set.
+     */
+    private $localeIsSet = false;
+
+    /**
      * @OA\Get(
      *     path="/api/{any}",
      *     summary="Set the current language by header",
@@ -102,17 +108,27 @@ class SetLocale
         }
 
         // For web requests, check the standard sources
-        $possibleLocales = [
-        $request->get('lang'),
-        Cookie::get('lang'),
-        Session::get('lang'),
-        $request->getPreferredLanguage($enabledLanguages),
-        config('app.locale'),
-        ];
-        $locale = collect($possibleLocales)->first(fn($lang) => in_array($lang, $enabledLanguages));
+        foreach ([
+            fn() => $request->get('lang'),
+            fn() => Cookie::get('lang'),
+            fn() => Session::get('lang'),
+            fn() => $this->getAcceptedLanguage($enabledLanguages),
+            fn() => config('app.locale'),
+        ] as $resolver) {
+            $locale = $resolver();
+            if (in_array($locale, $enabledLanguages)) {
+                break;
+            }
+        }
+    
+        // if (!$this->localeIsSet) {
+            App::setLocale($locale);
+        // }
 
-        // Save the language in the session and cookies
+        // Save the language in the session
         Session::put('lang', $locale);
+
+        // Set the cookie for the language
         $response = $next($request);
         return $response->withCookie(cookie('lang', $locale, 525600)); // 1 year
     }
@@ -144,11 +160,39 @@ class SetLocale
 
     private function getDefaultApiLocale(Request $request, array $enabledLanguages): string
     {
-        $locale = substr($request->header('Accept-Language'), 0, 2);
-        if ($locale && in_array($locale, $enabledLanguages)) {
-            return $locale;
-        }
+        $locale = $this->getAcceptedLanguage($enabledLanguages);
+        return $locale ?? config('app.locale');
+    }
 
-        return config('app.locale');
+    protected function getAcceptedLanguage(array $enabledLanguages): ?string
+    {
+        $acceptLanguage = request()->header('Accept-Language');
+    
+        if (!$acceptLanguage) {
+            return null;
+        }
+    
+        // Convert allowed languages to lowercase for comparison
+        $enabledLanguages = array_map('strtolower', $enabledLanguages);
+    
+        $seen = [];
+    
+        foreach (explode(',', $acceptLanguage) as $lang) {
+            $parts = explode(';q=', trim($lang));
+            $locale = strtolower(trim($parts[0]));
+            $short = substr($locale, 0, 2);
+    
+            if (strlen($short) < 2 || isset($seen[$short])) {
+                continue;
+            }
+    
+            $seen[$short] = true;
+    
+            if (in_array($short, $enabledLanguages, true)) {
+                return $short;
+            }
+        }
+    
+        return null;
     }
 }
