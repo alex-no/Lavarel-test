@@ -115,4 +115,23 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Files of Mail Templates
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the files of mail templates that are used for
+    | sending emails. You can specify different templates for different
+    | languages. The keys are the language codes and the values are the
+    | paths to the template files.
+    |
+    | Supported: "uk", "en", "ru"
+    |
+    */
+    'confirm_templates' => [
+        'uk' => 'emails.confirm.uk',
+        'en' => 'emails.confirm.en',
+        'ru' => 'emails.confirm.ru',
+    ],
+
 ];

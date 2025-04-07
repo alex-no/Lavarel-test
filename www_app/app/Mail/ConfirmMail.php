@@ -7,6 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class ConfirmMail extends Mailable
 {
@@ -17,8 +18,16 @@ class ConfirmMail extends Mailable
      * @var string
      */
     public $name;
+    /**
+     * The URL for email verification.
+     * @var string
+     */
     public $verifyUrl;
 
+    /**
+     * The view template for the email.
+     */
+    public $mailTemplate;
 
     /**
      * Create a new message instance.
@@ -27,6 +36,8 @@ class ConfirmMail extends Mailable
     {
         $this->name = $name;
         $this->verifyUrl = $verifyUrl;
+        $language = App::getLocale();
+        $this->mailTemplate = config("mail.confirm_templates.$language") ?? config("mail.confirm_templates.uk");
     }
 
     /**
@@ -35,7 +46,7 @@ class ConfirmMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'My Test Mail',
+            subject: 'Confirm Mail',
         );
     }
 
@@ -45,7 +56,7 @@ class ConfirmMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.confirm',
+            view: $this->mailTemplate,
         );
     }
 
@@ -65,7 +76,7 @@ class ConfirmMail extends Mailable
     public function build()
     {
         return $this->subject('Confirm email')
-                    ->view('emails.confirm');
+                    ->view($this->mailTemplate);
     }
 
     /**
@@ -73,7 +84,7 @@ class ConfirmMail extends Mailable
      */
     public function render()
     {
-        return $this->view('emails.confirm')
+        return $this->view($this->mailTemplate)
                     ->with([
                         'name' => $this->name,
                     ]);

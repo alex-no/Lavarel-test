@@ -93,7 +93,7 @@ class SetLocale
         $enabledLanguages = Language::where('is_enabled', true)->pluck('code')->toArray();
 
         // If this is an API request, get the language from the token
-        if ($request->is('api/*')) {
+        if ($request->is('api/*') || $request->expectsJson()) {
             $locale = $this->getApiLocale($request, $enabledLanguages);
             // Set the locale
             App::setLocale($locale);
