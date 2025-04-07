@@ -27,7 +27,7 @@ class ConfirmMail extends Mailable
     /**
      * The view template for the email.
      */
-    public $mailTemplate;
+    protected $viewTemplate;
 
     /**
      * Create a new message instance.
@@ -36,8 +36,9 @@ class ConfirmMail extends Mailable
     {
         $this->name = $name;
         $this->verifyUrl = $verifyUrl;
+        // Set the view template based on the user's language
         $language = App::getLocale();
-        $this->mailTemplate = config("mail.confirm_templates.$language") ?? config("mail.confirm_templates.uk");
+        $this->viewTemplate = config("mail.confirm_templates.$language") ?? config("mail.confirm_templates.uk");
     }
 
     /**
@@ -56,7 +57,7 @@ class ConfirmMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: $this->mailTemplate,
+            view: $this->viewTemplate,
         );
     }
 
@@ -76,7 +77,7 @@ class ConfirmMail extends Mailable
     public function build()
     {
         return $this->subject('Confirm email')
-                    ->view($this->mailTemplate);
+                    ->view($this->viewTemplate);
     }
 
     /**
@@ -84,7 +85,7 @@ class ConfirmMail extends Mailable
      */
     public function render()
     {
-        return $this->view($this->mailTemplate)
+        return $this->view($this->viewTemplate)
                     ->with([
                         'name' => $this->name,
                     ]);
