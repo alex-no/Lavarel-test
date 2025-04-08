@@ -35,14 +35,14 @@ class DatabaseController extends Controller
 
     public function checkEmailSend()
     {
-        //$email = 'test@example.com';
         $email = 'alex@4n.com.ua';
         $name = 'Alex';
-        $verifyUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            Carbon::now()->addMinutes(60),
-            ['id' => 1, 'hash' => sha1('test')]
-        );
+        $verifyUrl = 'http://example.com/verify-email?' . http_build_query([
+            'id' => 1,
+            'email' => $email,
+            'expires' => Carbon::now()->addMinutes(60)->timestamp,
+            'signature' => hash_hmac('sha256', $email, config('app.key')),
+        ]);
 
         Mail::to($email)->send(new ConfirmMail($name, $verifyUrl));
         return response()->json([
