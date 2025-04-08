@@ -51,6 +51,13 @@ class VerificationController extends Controller
  *         description="Signature for verifying the URL",
  *         @OA\Schema(type="string", example="464922ad1874fe858f0de7bc906f992fb6c19465b740dbf240b76a99c1d43072")
  *     ),
+ *     @OA\Parameter(
+ *         name="lang",
+ *         in="query",
+ *         required=false,
+ *         description="Optional language code (e.g., 'en', 'uk')",
+ *         @OA\Schema(type="string", example="en")
+ *     ),
  *     @OA\Response(
  *         response=200,
  *         description="Email verified successfully"

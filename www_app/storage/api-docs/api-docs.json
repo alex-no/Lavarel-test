@@ -1499,7 +1499,7 @@
                         "schema": {
                             "type": "string",
                             "format": "email",
-                            "example": "alex4@4n.com.ua"
+                            "example": "alex@4n.com.ua"
                         }
                     },
                     {
@@ -1520,6 +1520,16 @@
                         "schema": {
                             "type": "string",
                             "example": "464922ad1874fe858f0de7bc906f992fb6c19465b740dbf240b76a99c1d43072"
+                        }
+                    },
+                    {
+                        "name": "lang",
+                        "in": "query",
+                        "description": "Optional language code (e.g., 'en', 'uk')",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "en"
                         }
                     }
                 ],
