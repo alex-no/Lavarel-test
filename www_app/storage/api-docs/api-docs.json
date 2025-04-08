@@ -1472,6 +1472,70 @@
                 }
             }
         },
+        "/verify-email": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify email address",
+                "description": "Verifies the user's email address using a signed URL with email, expiration timestamp, user ID, and signature.",
+                "operationId": "759799dc939fffb7ac180d6cb48e3c9e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email address (URL-encoded)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "example": "alex4@4n.com.ua"
+                        }
+                    },
+                    {
+                        "name": "expires",
+                        "in": "query",
+                        "description": "Expiration timestamp of the signed URL",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1743993783
+                        }
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "description": "Signature for verifying the URL",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "464922ad1874fe858f0de7bc906f992fb6c19465b740dbf240b76a99c1d43072"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email verified successfully"
+                    },
+                    "400": {
+                        "description": "Invalid or expired verification link"
+                    },
+                    "422": {
+                        "description": "Email already verified or user not found"
+                    }
+                }
+            }
+        },
         "/api/{any}": {
             "get": {
                 "tags": [

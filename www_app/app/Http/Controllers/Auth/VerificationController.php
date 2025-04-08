@@ -17,43 +17,54 @@ class VerificationController extends Controller
 {
     use Verifiable;
 
-    /**
-     * @OA\Get(
-     *     path="/api/email/verify/{id}/{email}",
-     *     summary="Verify user email address",
-     *     tags={"Authentication"},
-     *     description="Verify the user's email address",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="User ID",
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Parameter(
-     *         name="email",
-     *         in="path",
-     *         required=true,
-     *         description="Email for verification",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="signature",
-     *         in="path",
-     *         required=true,
-     *         description="Signature for verification",
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Email verified successfully"
-     *     ),
-     *     @OA\Response(
-     *         response=403,
-     *         description="Invalid or expired link"
-     *     ),
-     * )
-     */
+/**
+ * @OA\Get(
+ *     path="/verify-email",
+ *     summary="Verify email address",
+ *     tags={"Authentication"},
+ *     description="Verifies the user's email address using a signed URL with email, expiration timestamp, user ID, and signature.",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="query",
+ *         required=true,
+ *         description="User ID",
+ *         @OA\Schema(type="integer", example=10)
+ *     ),
+ *     @OA\Parameter(
+ *         name="email",
+ *         in="query",
+ *         required=true,
+ *         description="User's email address (URL-encoded)",
+ *         @OA\Schema(type="string", format="email", example="alex@4n.com.ua")
+ *     ),
+ *     @OA\Parameter(
+ *         name="expires",
+ *         in="query",
+ *         required=true,
+ *         description="Expiration timestamp of the signed URL",
+ *         @OA\Schema(type="integer", example=1743993783)
+ *     ),
+ *     @OA\Parameter(
+ *         name="signature",
+ *         in="query",
+ *         required=true,
+ *         description="Signature for verifying the URL",
+ *         @OA\Schema(type="string", example="464922ad1874fe858f0de7bc906f992fb6c19465b740dbf240b76a99c1d43072")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Email verified successfully"
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid or expired verification link"
+ *     ),
+ *     @OA\Response(
+ *         response=422,
+ *         description="Email already verified or user not found"
+ *     )
+ * )
+ */
 //    public function verify(EmailVerificationRequest $request)
     public function verify(Request $request)
     {
