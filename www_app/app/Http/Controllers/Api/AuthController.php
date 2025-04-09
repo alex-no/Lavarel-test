@@ -28,7 +28,7 @@ use Carbon\Carbon;
  * @OA\Schema(
  *     schema="Auth",
  *     title="Authentication",
- *     description="Аутентификация",
+ *     description="Authentication",
  *     @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
  *     @OA\Property(property="password", type="string", format="password", example="password123")
  * )
