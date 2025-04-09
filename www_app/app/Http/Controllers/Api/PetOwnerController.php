@@ -15,8 +15,8 @@ use App\Models\PetOwner;
  * )
  * @OA\Schema(
  *     schema="PetOwner",
- *     title="PetOwners",
- *     description="Владельцы животных",
+ *     title="Pet Owners",
+ *     description="Pet Owners",
  * )
  */
 class PetOwnerController extends Controller
@@ -33,8 +33,8 @@ class PetOwnerController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="object",
-     *             title="PetOwners",
-     *             description="Владельцы животных",
+     *             title="Pet Owners",
+     *             description="Pet Owners",
      *             @OA\Property(
      *                 property="id",
      *                 type="integer",
@@ -45,13 +45,13 @@ class PetOwnerController extends Controller
      *                 property="user_id",
      *                 type="integer",
      *                 example="1",
-     *                 description="ID of owner"
+     *                 description="ID of Owner"
      *             ),
      *             @OA\Property(
      *                 property="owner",
      *                 type="string",
      *                 example="John Doe",
-     *                 description="Name of owner"
+     *                 description="Name of Owner"
      *             ),
      *             @OA\Property(
      *                 property="pet_type_id",

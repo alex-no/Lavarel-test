@@ -30,7 +30,7 @@ use Carbon\Carbon;
  *     title="Authentication",
  *     description="Authentication",
  *     @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
- *     @OA\Property(property="password", type="string", format="password", example="password123")
+ *     @OA\Property(property="password", type="string", format="password", example="password-567")
  * )
  */
 class AuthController extends Controller
@@ -50,8 +50,8 @@ class AuthController extends Controller
      *             @OA\Property(property="name", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
      *             @OA\Property(property="phone", type="string", format="phone", example="+380667147444"),
-     *             @OA\Property(property="password", type="string", format="password", example="password123"),
-     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
+     *             @OA\Property(property="password", type="string", format="password", example="password-567"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password-567")
      *         )
      *     ),
      *     @OA\Response(
@@ -116,7 +116,7 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"username","password"},
      *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
-     *             @OA\Property(property="password", type="string", example="password123")
+     *             @OA\Property(property="password", type="string", example="password-567")
      *         )
      *     ),
      *     @OA\Response(
