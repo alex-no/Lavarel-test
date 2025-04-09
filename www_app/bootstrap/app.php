@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->group('web', [
-            SetLocale::class, // Middleware for web
+            SetLocale::class, // Middleware for WEB
         ]);
         $middleware->group('api', [
             SetLocale::class, // Middleware for API
