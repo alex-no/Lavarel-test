@@ -12,7 +12,6 @@ use App\Http\Controllers\Api\PetTypeController;
 use App\Http\Controllers\Api\PetBreedController;
 use App\Http\Controllers\Api\PetOwnerController;
 
-//Route::apiResource('languages', LanguageController::class);
 Route::get('/languages', [LanguageController::class, 'index']);
 Route::get('/languages/{language}', [LanguageController::class, 'show']);
 Route::post('/languages', [LanguageController::class, 'store']);
