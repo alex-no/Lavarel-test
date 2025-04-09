@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\DatabaseController;
+use App\Http\Controllers\Api\TestController;
 use App\Http\Controllers\Api\PetTypeController;
 use App\Http\Controllers\Api\PetBreedController;
 use App\Http\Controllers\Api\PetOwnerController;
@@ -68,5 +68,5 @@ Route::apiResource('/pet-breeds', PetBreedController::class);
 //     ->whereNumber('petBreed');
 Route::apiResource('/pet-owners', PetOwnerController::class);
 
-Route::get('/check-db', [DatabaseController::class, 'checkDatabaseConnection']);
-Route::get('/check-mail', [DatabaseController::class, 'checkEmailSend']);
+Route::get('/check-db', [TestController::class, 'checkDatabaseConnection']);
+Route::get('/check-mail', [TestController::class, 'checkEmailSend']);

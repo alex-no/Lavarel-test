@@ -14,8 +14,9 @@ use Laravel\Sanctum\HasApiTokens;
  *     title="User",
  *     description="Схема пользователя",
  *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="name", type="string", example="Иван Иванов"),
- *     @OA\Property(property="email", type="string", example="user@example.com")
+ *     @OA\Property(property="name", type="string", example="Петро Харківський"),
+ *     @OA\Property(property="email", type="string", example="user@example.com"),
+ *     @OA\Property(property="language_code", type="string", example="uk")
  * )
  */
 class User extends Authenticatable implements MustVerifyEmail

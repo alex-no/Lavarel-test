@@ -1668,11 +1668,15 @@
                     },
                     "name": {
                         "type": "string",
-                        "example": "Иван Иванов"
+                        "example": "Петро Харківський"
                     },
                     "email": {
                         "type": "string",
                         "example": "user@example.com"
+                    },
+                    "language_code": {
+                        "type": "string",
+                        "example": "uk"
                     }
                 },
                 "type": "object"

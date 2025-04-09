@@ -9,7 +9,7 @@ use App\Mail\ConfirmMail;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
-class DatabaseController extends Controller
+class TestController extends Controller
 {
     public function checkDatabaseConnection()
     {

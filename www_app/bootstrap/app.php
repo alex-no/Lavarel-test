@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\SetLocale;  
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,10 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->group('web', [
-            \App\Http\Middleware\SetLocale::class, // Middleware for web
+            SetLocale::class, // Middleware for web
         ]);
         $middleware->group('api', [
-            \App\Http\Middleware\SetLocale::class, // Middleware for API
+            SetLocale::class, // Middleware for API
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
