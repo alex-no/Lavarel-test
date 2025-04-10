@@ -42,12 +42,12 @@
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "password123"
+                                        "example": "password-567"
                                     },
                                     "password_confirmation": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "password123"
+                                        "example": "password-567"
                                     }
                                 },
                                 "type": "object"
@@ -109,7 +109,7 @@
                                     },
                                     "password": {
                                         "type": "string",
-                                        "example": "password123"
+                                        "example": "password-567"
                                     }
                                 },
                                 "type": "object"
@@ -992,8 +992,8 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "title": "PetOwners",
-                                    "description": "Владельцы животных",
+                                    "title": "Pet Owners",
+                                    "description": "Pet Owners",
                                     "properties": {
                                         "id": {
                                             "description": "ID of the Pet",
@@ -1001,12 +1001,12 @@
                                             "example": "1"
                                         },
                                         "user_id": {
-                                            "description": "ID of owner",
+                                            "description": "ID of Owner",
                                             "type": "integer",
                                             "example": "1"
                                         },
                                         "owner": {
-                                            "description": "Name of owner",
+                                            "description": "Name of Owner",
                                             "type": "string",
                                             "example": "John Doe"
                                         },
@@ -1631,7 +1631,7 @@
         "schemas": {
             "Auth": {
                 "title": "Authentication",
-                "description": "Аутентификация",
+                "description": "Authentication",
                 "properties": {
                     "email": {
                         "type": "string",
@@ -1641,7 +1641,7 @@
                     "password": {
                         "type": "string",
                         "format": "password",
-                        "example": "password123"
+                        "example": "password-567"
                     }
                 },
                 "type": "object"
@@ -1651,8 +1651,8 @@
                 "description": "Породы животных"
             },
             "PetOwner": {
-                "title": "PetOwners",
-                "description": "Владельцы животных"
+                "title": "Pet Owners",
+                "description": "Pet Owners"
             },
             "PetType": {
                 "title": "PetTypes",
@@ -1660,11 +1660,15 @@
             },
             "User": {
                 "title": "User",
-                "description": "Схема пользователя",
+                "description": "User scheme",
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "example": 1
+                        "example": 2
+                    },
+                    "language_code": {
+                        "type": "string",
+                        "example": "uk"
                     },
                     "name": {
                         "type": "string",
@@ -1674,9 +1678,9 @@
                         "type": "string",
                         "example": "user@example.com"
                     },
-                    "language_code": {
+                    "phone": {
                         "type": "string",
-                        "example": "uk"
+                        "example": "+380667777444"
                     }
                 },
                 "type": "object"
