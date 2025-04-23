@@ -30,14 +30,13 @@ class LanguageSelector
             fn() => !$isApi ? $this->extractValidLang(Session::get($param)) : null, // 4. Session
             fn() => !$isApi ? $this->extractValidLang(Cookie::get($param)) : null, // 5. Cookies
             fn() => $this->extractValidLang($request->header('Accept-Language')), // 6. Accept-Language header
-            fn() => $this->default, // 7. Default
         ] as $resolver) {
             $lang = $resolver();
             if ($lang) {
                 return $this->finalize($lang, $isApi);
             }
         }
-        return null;
+        return $this->default; // 7. Default language
     }
 
     protected function finalize(string $lang, bool $isApi): string
@@ -65,7 +64,9 @@ class LanguageSelector
     {
         $prioritized = [];
 
-        if (is_array($input)) {
+        if (empty($input)) {
+            return null;
+        } elseif (is_array($input)) {
             foreach ($input as $lang) {
                 $prioritized[$lang] = 1.0;
             }
