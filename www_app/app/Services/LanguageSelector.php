@@ -19,55 +19,25 @@ class LanguageSelector
     public string $enabledField = 'is_enabled';
     public string $orderField = 'order';
 
-    public function detect(Request $request, bool $isApi = false): string
+    public function detect(Request $request, bool $isApi = false): ?string
     {
         $param = $this->paramName;
-        $lang = null;
 
-        // 1. POST
-        $lang = $this->extractValidLang($request->post($param));
-        if ($lang) {
-            return $this->finalize($lang, $isApi);
-        }
-
-        // 2. GET
-        $lang = $this->extractValidLang($request->query($param));
-        if ($lang) {
-            return $this->finalize($lang, $isApi);
-        }
-
-        // 3. User profile
-        if (Auth::check()) {
-            $lang = $this->extractValidLang(Auth::user()?->{$this->userAttribute});
+        foreach ([
+            fn() => $this->extractValidLang($request->post($param)), // 1. POST
+            fn() => $this->extractValidLang($request->query($param)), // 2. GET
+            fn() => Auth::check() ? $this->extractValidLang(Auth::user()?->{$this->userAttribute}) : null, // 3. User profile
+            fn() => !$isApi ? $this->extractValidLang(Session::get($param)) : null, // 4. Session
+            fn() => !$isApi ? $this->extractValidLang(Cookie::get($param)) : null, // 5. Cookies
+            fn() => $this->extractValidLang($request->header('Accept-Language')), // 6. Accept-Language header
+            fn() => $this->default, // 7. Default
+        ] as $resolver) {
+            $lang = $resolver();
             if ($lang) {
                 return $this->finalize($lang, $isApi);
             }
         }
-
-        // 4. Session
-        if (!$isApi) {
-            $lang = $this->extractValidLang(Session::get($param));
-            if ($lang) {
-                return $this->finalize($lang, $isApi);
-            }
-        }
-
-        // 5. Cookies
-        if (!$isApi) {
-            $lang = $this->extractValidLang(Cookie::get($param));
-            if ($lang) {
-                return $this->finalize($lang, $isApi);
-            }
-        }
-
-        // 6. Accept-Language header
-        $lang = $this->extractValidLang($request->header('Accept-Language'));
-        if ($lang) {
-            return $this->finalize($lang, $isApi);
-        }
-
-        // 7. Default
-        return $this->default;
+        return null;
     }
 
     protected function finalize(string $lang, bool $isApi): string

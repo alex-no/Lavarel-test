@@ -6,8 +6,6 @@ use App\Services\LanguageSelector;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-// use Illuminate\Support\Facades\Session;
-// use Illuminate\Support\Facades\Cookie;
 
 /**
  * @OA\OpenApi(
