@@ -2,13 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\LanguageSelector;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Session;
-use App\Models\Language;
-use Laravel\Sanctum\PersonalAccessToken;
+// use Illuminate\Support\Facades\Session;
+// use Illuminate\Support\Facades\Cookie;
 
 /**
  * @OA\OpenApi(
@@ -24,7 +23,6 @@ use Laravel\Sanctum\PersonalAccessToken;
  *     )
  * )
  */
-
 class SetLocale
 {
     /**
@@ -43,9 +41,7 @@ class SetLocale
      *     @OA\Response(response=200, description="Language set successfully"),
      * )
      */
-    public function getLanguage()
-    {
-    }
+    public function getLanguage() {}
 
     /**
      * @OA\Post(
@@ -63,9 +59,7 @@ class SetLocale
      *     @OA\Response(response=200, description="Language set successfully"),
      * )
      */
-    public function postLanguage()
-    {
-    }
+    public function postLanguage() {}
 
     /**
      * @OA\Put(
@@ -83,108 +77,25 @@ class SetLocale
      *     @OA\Response(response=200, description="Language set successfully"),
      * )
      */
-    public function putLanguage()
-    {
-    }
-    
+    public function putLanguage() {}
+
     public function handle(Request $request, Closure $next)
     {
-        // Load the list of available languages from the database
-        $enabledLanguages = Language::where('is_enabled', true)->pluck('code')->toArray();
+        $isApi = $request->is('api/*') || $request->expectsJson();
 
-        // If this is an API request, get the language from the token
-        if ($request->is('api/*') || $request->expectsJson()) {
-            $locale = $this->getApiLocale($request, $enabledLanguages);
-            // Set the locale
-            App::setLocale($locale);
+        $selector = new LanguageSelector();
+        $locale = $selector->detect($request, $isApi);
 
-            return $next($request);
-        }
-
-        // For web requests, check the standard sources
-        foreach ([
-            fn() => $request->get('lang'),
-            fn() => Cookie::get('lang'),
-            fn() => Session::get('lang'),
-            fn() => $this->getAcceptedLanguage($enabledLanguages),
-            fn() => config('app.locale'),
-        ] as $resolver) {
-            $locale = $resolver();
-            if (in_array($locale, $enabledLanguages)) {
-                break;
-            }
-        }
-    
         App::setLocale($locale);
 
-        // Save the language in the session
-        Session::put('lang', $locale);
-
-        // Set the cookie for the language
         $response = $next($request);
-        return $response->withCookie(cookie('lang', $locale, 525600)); // 1 year
-    }
 
-    /**
-     * Get the language from the API token.
-     */
-    private function getApiLocale(Request $request, array $enabledLanguages): string
-    {
-        // Extract the token from the Authorization: Bearer <token> header
-        $token = $request->bearerToken();
-        if (!$token) {
-            return $this->getDefaultApiLocale($request, $enabledLanguages);
+        // The language is saved in the session and cookies inside LanguageSelector,
+        // but the cookie still needs to be explicitly attached to the response
+        if (!$isApi) {
+            $response->withCookie(cookie($selector->paramName, $locale, 525600));
         }
 
-        // Get the user by token
-        $accessToken = PersonalAccessToken::findToken($token);
-        if (!$accessToken) {
-            return $this->getDefaultApiLocale($request, $enabledLanguages);
-        }
-
-        $user = $accessToken->tokenable; // Get the user
-        if (!$user || !in_array($user->language_code, $enabledLanguages)) {
-            return $this->getDefaultApiLocale($request, $enabledLanguages);
-        }
-
-        return $user->language_code; // Return the saved language
-    }
-
-    private function getDefaultApiLocale(Request $request, array $enabledLanguages): string
-    {
-        $locale = $this->getAcceptedLanguage($enabledLanguages);
-        return $locale ?? config('app.locale');
-    }
-
-    protected function getAcceptedLanguage(array $enabledLanguages): ?string
-    {
-        $acceptLanguage = request()->header('Accept-Language');
-    
-        if (!$acceptLanguage) {
-            return null;
-        }
-    
-        // Convert allowed languages to lowercase for comparison
-        $enabledLanguages = array_map('strtolower', $enabledLanguages);
-    
-        $seen = [];
-    
-        foreach (explode(',', $acceptLanguage) as $lang) {
-            $parts = explode(';q=', trim($lang));
-            $locale = strtolower(trim($parts[0]));
-            $short = substr($locale, 0, 2);
-    
-            if (strlen($short) < 2 || isset($seen[$short])) {
-                continue;
-            }
-    
-            $seen[$short] = true;
-    
-            if (in_array($short, $enabledLanguages, true)) {
-                return $short;
-            }
-        }
-    
-        return null;
+        return $response;
     }
 }
