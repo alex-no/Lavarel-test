@@ -3,6 +3,8 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
+use App\Exceptions\MissingLocalizedAttributeException;
 
 trait LocalizedDbAttributeTrait
 {
@@ -31,9 +33,9 @@ trait LocalizedDbAttributeTrait
         $localized = "{$baseName}_{$lang}";
 
         // Check for the presence of the localized attribute
-        if (!in_array($localized, $this->getFillable())) {
+        if (!array_key_exists($localized, $this->getAttributes()) && !method_exists($this, 'get' . Str::studly($localized) . 'Attribute')) {
             if ($this->isStrict) {
-                throw new \Exception("Localized attribute {$localized} not found.");
+                throw new MissingLocalizedAttributeException($localized);
             }
             $localized = "{$baseName}_{$this->defaultLanguage}";
         }

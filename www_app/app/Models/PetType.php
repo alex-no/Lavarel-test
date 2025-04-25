@@ -9,9 +9,9 @@ class PetType extends AdvModel
 {
     /** @use HasFactory<\Database\Factories\PetTypeFactory> */
     use HasFactory;
-    protected $fillable = [
-        'name_uk',
-        'name_en',
-        'name_ru',
-    ];
+    // protected $fillable = [
+    //     'name_uk',
+    //     'name_en',
+    //     'name_ru',
+    // ];
 }
