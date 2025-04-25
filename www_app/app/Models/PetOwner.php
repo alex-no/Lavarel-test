@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Base\AdvModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PetOwner extends Model
+class PetOwner extends AdvModel
 {
     /** @use HasFactory<\Database\Factories\PetOwnerFactory> */
     use HasFactory;
+    protected $fillable = ['nickname_uk', 'nickname_en', 'nickname_ru'];
 
     /**
-     *  
+     *
      */
     public function user(): BelongsTo
     {
@@ -20,7 +21,7 @@ class PetOwner extends Model
     }
 
     /**
-     *  
+     *
      */
     public function petType(): BelongsTo
     {
@@ -28,7 +29,7 @@ class PetOwner extends Model
     }
 
     /**
-     *  
+     *
      */
     public function petBreed(): BelongsTo
     {

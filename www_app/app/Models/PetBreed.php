@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Base\AdvModel;
 
-class PetBreed extends Model
+class PetBreed extends AdvModel
 {
     /** @use HasFactory<\Database\Factories\PetBreedFactory> */
     use HasFactory;

@@ -16,10 +16,9 @@ class PetTypeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $language = App::getLocale();
         return [
             'id' => $this->id,
-            'name' => $this->{'name_' . $language},
+            'name' => $this->{'@@name'},
             'updated' => Carbon::parse($this->updated_at)->format('d.m.Y H:i'),
         ];
     }

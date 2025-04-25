@@ -16,19 +16,18 @@ class PetOwnerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $language = App::getLocale();
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
             'owner' => $this->user->name,
 
             'pet_type_id' => $this->pet_type_id,
-            'type' => $this->petType->{'name_' . $language},
+            'type' => $this->petType->{'@@name'},
 
             'pet_breed_id' => $this->pet_breed_id,
-            'breed' => $this->petBreed->{'name_' . $language},
+            'breed' => $this->petBreed->{'@@name'},
 
-            'nickname' => $this->{'nickname_' . $language},
+            'nickname' => $this->{'@@nickname'},
             'year_of_birth' => $this->year_of_birth,
             'age' => date('Y') - $this->year_of_birth,
             'updated' => Carbon::parse($this->updated_at)->format('d.m.Y H:i'),
