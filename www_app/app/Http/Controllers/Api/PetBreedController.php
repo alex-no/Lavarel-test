@@ -18,7 +18,7 @@ use App\Models\PetBreed;
  * @OA\Schema(
  *     schema="PetBreed",
  *     title="PetBreeds",
- *     description="Породы животных",
+ *     description="Породи тварин",
  * )
  */
 class PetBreedController extends Controller
@@ -68,7 +68,7 @@ class PetBreedController extends Controller
      *             @OA\Items(
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example="1"),
-     *                 @OA\Property(property="name", type="string", example="Китайская хохлатая собака"),
+     *                 @OA\Property(property="name", type="string", example="Китайський чубатий собака"),
      *                 @OA\Property(property="updated_at", type="datetime", example="2025-03-12T20:08:04.566Z")
      *             )
      *         )
