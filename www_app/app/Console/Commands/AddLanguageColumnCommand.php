@@ -77,11 +77,21 @@ class AddLanguageColumnCommand extends Command
 
                 // Determine type from last column in group
                 $lastColumn = end($groupColumns);
-                $baseType = DB::getSchemaBuilder()->getColumnType($table, $lastColumn);
+                $columnInfo = DB::selectOne("SHOW COLUMNS FROM `{$table}` WHERE Field = ?", [$lastColumn]);
+                $rawType = $columnInfo->Type;
 
+                $baseType = strtolower(preg_replace('/\(.*\)/', '', $rawType));
                 $blueprintMethod = self::TYPE_MAP[$baseType] ?? 'string';
-                Schema::table($table, function ($tableBlueprint) use ($newColumn, $blueprintMethod, $lastColumn) {
-                    $tableBlueprint->{$blueprintMethod}($newColumn)->nullable()->after($lastColumn);
+
+                // Extract length if present (e.g., from varchar(255), decimal(10,2), etc.)
+                $lengthParams = [];
+                if (preg_match('/\(([^)]+)\)/', $rawType, $matches)) {
+                    $lengthParts = explode(',', $matches[1]);
+                    $lengthParams = array_map('trim', $lengthParts);
+                }
+
+                Schema::table($table, function ($tableBlueprint) use ($newColumn, $blueprintMethod, $lastColumn, $lengthParams) {
+                    $tableBlueprint->{$blueprintMethod}($newColumn, ...$lengthParams)->nullable()->after($lastColumn);
                 });
 
                 $this->info("[{$table}] Added column '{$newColumn}' of type '{$blueprintMethod}' after '{$lastColumn}'.");
