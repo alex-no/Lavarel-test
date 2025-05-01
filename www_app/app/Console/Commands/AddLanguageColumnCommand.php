@@ -26,7 +26,10 @@ class AddLanguageColumnCommand extends Command
         }
 
         $this->info("Looking for tables with columns matching base languages: " . implode(', ', $baseLangs));
-        $tables = DB::connection()->getDoctrineSchemaManager()->listTableNames();
+
+        // Fetch list of table names without Doctrine
+        $tables = DB::select("SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE()");
+        $tables = array_map(fn($t) => $t->TABLE_NAME, $tables);
 
         foreach ($tables as $table) {
             $columns = Schema::getColumnListing($table);
