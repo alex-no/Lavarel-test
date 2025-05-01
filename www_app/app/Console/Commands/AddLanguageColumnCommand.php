@@ -9,6 +9,26 @@ use Illuminate\Support\Str;
 
 class AddLanguageColumnCommand extends Command
 {
+    const TYPE_MAP = [
+        'varchar' => 'string',
+        'char' => 'string',
+        'text' => 'text',
+        'longtext' => 'text',
+        'mediumtext' => 'text',
+        'tinytext' => 'text',
+        'int' => 'integer',
+        'bigint' => 'bigInteger',
+        'smallint' => 'smallInteger',
+        'tinyint' => 'tinyInteger',
+        'boolean' => 'boolean',
+        'datetime' => 'dateTime',
+        'timestamp' => 'timestamp',
+        'date' => 'date',
+        'float' => 'float',
+        'double' => 'double',
+        'decimal' => 'decimal',
+    ];
+
     protected $signature = 'db:add-language-column \
                             {--suffix= : New language suffix to add} \
                             {--base-langs= : Comma-separated list of base language suffixes}';
@@ -28,8 +48,9 @@ class AddLanguageColumnCommand extends Command
         $this->info("Looking for tables with columns matching base languages: " . implode(', ', $baseLangs));
 
         // Fetch list of table names without Doctrine
-        $tables = DB::select("SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE()");
-        $tables = array_map(fn($t) => $t->TABLE_NAME, $tables);
+        $tables = DB::select("SHOW TABLES");
+        $tableKey = 'Tables_in_' . DB::getDatabaseName();
+        $tables = array_map(fn($row) => $row->$tableKey, $tables);
 
         foreach ($tables as $table) {
             $columns = Schema::getColumnListing($table);
@@ -56,18 +77,14 @@ class AddLanguageColumnCommand extends Command
 
                 // Determine type from last column in group
                 $lastColumn = end($groupColumns);
-                $columnType = DB::getSchemaBuilder()->getColumnType($table, $lastColumn);
+                $baseType = DB::getSchemaBuilder()->getColumnType($table, $lastColumn);
 
-                // Default to string if unknown
-                if (!$columnType) {
-                    $columnType = 'string';
-                }
-
-                Schema::table($table, function ($tableBlueprint) use ($newColumn, $columnType) {
-                    $tableBlueprint->{$columnType}($newColumn)->nullable();
+                $blueprintMethod = self::TYPE_MAP[$baseType] ?? 'string';
+                Schema::table($table, function ($tableBlueprint) use ($newColumn, $blueprintMethod, $lastColumn) {
+                    $tableBlueprint->{$blueprintMethod}($newColumn)->nullable()->after($lastColumn);
                 });
 
-                $this->info("[{$table}] Added column '{$newColumn}' of type '{$columnType}'");
+                $this->info("[{$table}] Added column '{$newColumn}' of type '{$blueprintMethod}' after '{$lastColumn}'.");
             }
         }
 
