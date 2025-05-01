@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AddLanguageColumnCommand extends Command
 {
@@ -29,9 +30,12 @@ class AddLanguageColumnCommand extends Command
         'decimal' => 'decimal',
     ];
 
+    const REPORT_HEADER = ['table', 'new_column', 'type', 'after_column', 'status'];
+
     protected $signature = 'db:add-language-column \
                             {--suffix= : New language suffix to add} \
-                            {--base-langs= : Comma-separated list of base language suffixes}';
+                            {--base-langs= : Comma-separated list of base language suffixes} \
+                            {--report= : Optional path to CSV report file}';
 
     protected $description = 'Add new localized column to all tables that contain base language columns.';
 
@@ -39,6 +43,7 @@ class AddLanguageColumnCommand extends Command
     {
         $suffix = trim($this->option('suffix'));
         $baseLangs = array_filter(array_map('trim', explode(',', $this->option('base-langs'))));
+        $reportPath = $this->option('report');
 
         if (!$suffix || empty($baseLangs)) {
             $this->error('Both --suffix and --base-langs options are required.');
@@ -47,15 +52,15 @@ class AddLanguageColumnCommand extends Command
 
         $this->info("Looking for tables with columns matching base languages: " . implode(', ', $baseLangs));
 
-        // Fetch list of table names without Doctrine
         $tables = DB::select("SHOW TABLES");
         $tableKey = 'Tables_in_' . DB::getDatabaseName();
         $tables = array_map(fn($row) => $row->$tableKey, $tables);
 
+        $reportRows = [self::REPORT_HEADER];
+
         foreach ($tables as $table) {
             $columns = Schema::getColumnListing($table);
 
-            // Group columns by base name
             $groups = [];
             foreach ($columns as $column) {
                 foreach ($baseLangs as $lang) {
@@ -72,30 +77,37 @@ class AddLanguageColumnCommand extends Command
 
                 if (in_array($newColumn, $columns)) {
                     $this->line("[{$table}] Skipping: '{$newColumn}' already exists.");
+                    $reportRows[] = [$table, $newColumn, '', '', 'skipped (already exists)'];
                     continue;
                 }
 
                 // Determine type from last column in group
                 $lastColumn = end($groupColumns);
-                $columnInfo = DB::selectOne("SHOW COLUMNS FROM `{$table}` WHERE Field = ?", [$lastColumn]);
-                $rawType = $columnInfo->Type;
+                $columnDetails = DB::selectOne("SHOW COLUMNS FROM `{$table}` WHERE Field = ?", [$lastColumn]);
 
-                $baseType = strtolower(preg_replace('/\(.*\)/', '', $rawType));
+                $baseType = DB::getSchemaBuilder()->getColumnType($table, $lastColumn);
                 $blueprintMethod = self::TYPE_MAP[$baseType] ?? 'string';
 
                 // Extract length if present (e.g., from varchar(255), decimal(10,2), etc.)
-                $lengthParams = [];
-                if (preg_match('/\(([^)]+)\)/', $rawType, $matches)) {
-                    $lengthParts = explode(',', $matches[1]);
-                    $lengthParams = array_map('trim', $lengthParts);
+                $lengthParams = null;
+                if (preg_match('/^([a-z]+)\\(([^)]+)\\)/i', $columnDetails->Type, $matches)) {
+                    $lengthParams = explode(',', $matches[2]);
                 }
 
                 Schema::table($table, function ($tableBlueprint) use ($newColumn, $blueprintMethod, $lastColumn, $lengthParams) {
-                    $tableBlueprint->{$blueprintMethod}($newColumn, ...$lengthParams)->nullable()->after($lastColumn);
+                    $tableBlueprint->{$blueprintMethod}($newColumn, ...($lengthParams ?? []))->nullable()->after($lastColumn);
                 });
 
-                $this->info("[{$table}] Added column '{$newColumn}' of type '{$blueprintMethod}' after '{$lastColumn}'.");
+                $lengthDesc = $lengthParams ? implode(',', $lengthParams) : '';
+                $this->info("[{$table}] Added column '{$newColumn}' of type '{$blueprintMethod}({$lengthDesc})' after '{$lastColumn}'.");
+                $reportRows[] = [$table, $newColumn, $blueprintMethod . ($lengthDesc ? "({$lengthDesc})" : ''), $lastColumn, 'added'];
             }
+        }
+
+        if ($reportPath) {
+            $csvContent = collect($reportRows)->map(fn($row) => implode(',', array_map(fn($v) => '"' . str_replace('"', '""', $v) . '"', $row)))->implode("\n");
+            file_put_contents(base_path($reportPath), $csvContent);
+            $this->info("Report saved to: {$reportPath}");
         }
 
         return static::SUCCESS;
