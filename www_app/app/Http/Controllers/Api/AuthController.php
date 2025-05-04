@@ -16,11 +16,6 @@ use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 
 /**
- * @OA\Info(
- *     title="API Documentation",
- *     version="1.0.0",
- *     description="This is the API documentation for the Laravel application."
- * )
  * @OA\Tag(
  *     name="Auth",
  *     description="API for working with Authentication"

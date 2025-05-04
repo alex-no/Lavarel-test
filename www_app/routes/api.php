@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Http\Controllers\Api\SiteController;
 use App\Http\Controllers\Api\LanguageController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TestController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Api\PetTypeController;
 use App\Http\Controllers\Api\PetBreedController;
 use App\Http\Controllers\Api\PetOwnerController;
 
+Route::get('/', [SiteController::class, 'index']);
 Route::get('/languages', [LanguageController::class, 'index']);
 Route::get('/languages/{language}', [LanguageController::class, 'show']);
 Route::post('/languages', [LanguageController::class, 'store']);
@@ -64,7 +66,7 @@ Route::apiResource('/pet-types', PetTypeController::class);
 Route::apiResource('/pet-breeds', PetBreedController::class);
 // Route::get('/pet-breeds/{id}', [PetBreedController::class, 'show']);
 // Route::get('/pet-breeds/{petBreed}', [PetBreedController::class, 'show'])
-//     ->whereNumber('petBreed'); 
+//     ->whereNumber('petBreed');
 Route::apiResource('/pet-owners', PetOwnerController::class);
 
 Route::get('/check-db', [TestController::class, 'checkDatabaseConnection']);

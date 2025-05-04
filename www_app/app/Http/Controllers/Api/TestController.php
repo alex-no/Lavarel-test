@@ -11,19 +11,43 @@ use Carbon\Carbon;
 
 class TestController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/check-db",
+     *     summary="List database tables",
+     *     tags={"Test"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns list of table names",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Database connection is successful"
+     *             ),
+     *             @OA\Property(
+     *                 property="tables",
+     *                 type="array",
+     *                 @OA\Items(type="string")
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function checkDatabaseConnection()
     {
         try {
-            // Проверяем соединение
+            // Checking the connection
             DB::connection()->getPdo();
 
-            // Получаем список таблиц
+            // Retrieve the list of tables
             $tables = DB::select('SHOW TABLES');
             // $tables = DB::select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
 
             return response()->json([
                 'message' => 'Database connection is successful',
-                'tables' => array_map('current', $tables) // Преобразуем результат в простой массив
+                'tables' => array_map('current', $tables) // Convert the result into a simple array
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
