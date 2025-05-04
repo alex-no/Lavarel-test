@@ -34,3 +34,4 @@ auth.json
 /doc/~$CribsLaravel.xlsx
 /doc/.ssh/*.ppk
 /doc/ssh/*.ppk
+/www_app/storage/api-docs/api-docs.json
