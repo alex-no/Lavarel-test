@@ -576,7 +576,7 @@
                                             },
                                             "name": {
                                                 "type": "string",
-                                                "example": "Китайская хохлатая собака"
+                                                "example": "Китайський чубатий собака"
                                             },
                                             "updated_at": {
                                                 "type": "string",
@@ -1648,7 +1648,7 @@
             },
             "PetBreed": {
                 "title": "PetBreeds",
-                "description": "Породы животных"
+                "description": "Породи тварин"
             },
             "PetOwner": {
                 "title": "Pet Owners",
