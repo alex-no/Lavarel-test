@@ -33,3 +33,4 @@ auth.json
 /bak
 /doc/~$CribsLaravel.xlsx
 /doc/.ssh/*.ppk
+/doc/ssh/*.ppk
