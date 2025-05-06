@@ -91,7 +91,10 @@ return [
         | NOTE: these will be overwritten if you pass data into the view with the same key.
         |
         */
-        'globals' => [],
+        'globals' => [
+            'app' => app(),
+            'config' => config(),
+        ],
     ],
 
     'extensions' => [
@@ -192,6 +195,12 @@ return [
             'head',
             'last',
             'mix',
+            'public_path' => function ($path = '') {
+                return public_path($path);
+            },
+            'file_exists' => function ($path) {
+                return file_exists($path);
+            },
         ],
 
         /*

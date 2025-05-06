@@ -2,12 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerificationController;
-// use L5Swagger\Http\Controllers\SwaggerController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome', [
         'title' => 'Welcome Page',
         'name' => 'Alex',
+        'locale' => app()->getLocale(),
+        'loginRouteExists' => Route::has('login'),
+        'registerRouteExists' => Route::has('register'),
+        'isAuthenticated' => Auth::check(),
     ]);
 });
 
