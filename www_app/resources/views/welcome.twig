@@ -273,5 +273,13 @@
         {% if loginRouteExists %}
             <div class="h-14.5 hidden lg:block"></div>
         {% endif %}
+        <footer id="footer" class="mt-auto py-3 bg-light">
+            <div class="container">
+                <div class="row text-muted">
+                    <div class="col-md-6 text-center text-md-start">&copy; Oleksandr Nosov, {{ "now"|date("Y") }}</div>
+                    <div class="col-md-6 text-center text-md-end">Powered by <a href="https://laravel.com/" rel="external">Laravel</a> / <a href="https://twig.symfony.com/" rel="external">Twig</a></div>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>
