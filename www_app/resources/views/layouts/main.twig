@@ -4,14 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Default Title{% endblock %}</title>
-        <!-- Styles / Scripts -->
-        {% if file_exists(public_path('build/manifest.json')) or file_exists(public_path('hot')) %}
-            {{ vite(['resources/css/app.css', 'resources/js/app.js']) }}
-        {% else %}
-            <style>
-                {% block styles %}{% endblock %}
-            </style>
-        {% endif %}
+
+    {# Bootstrap CSS CDN #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- Styles / Scripts -->
+    {% if file_exists(public_path('build/manifest.json')) or file_exists(public_path('hot')) %}
+        {{ vite(['resources/css/app.css', 'resources/js/app.js']) }}
+    {% else %}
+        <style>
+            {% block styles %}{% endblock %}
+        </style>
+    {% endif %}
 </head>
 <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
 
@@ -54,14 +58,20 @@
     {% if loginRouteExists %}
         <div class="h-14.5 hidden lg:block"></div>
     {% endif %}
-    <footer id="footer" class="mt-auto py-3 bg-light">
-        <div class="container">
+    <footer id="footer" class="mt-auto py-3 bg-light w-100">
+        <div class="container mx-auto">
             <div class="row text-muted">
                 <div class="col-md-6 text-center text-md-start">&copy; Oleksandr Nosov, {{ "now"|date("Y") }}</div>
                 <div class="col-md-6 text-center text-md-end">Powered by <a href="https://laravel.com/" rel="external">Laravel</a> / <a href="https://twig.symfony.com/" rel="external">Twig</a></div>
             </div>
         </div>
     </footer>
+
+{# Bootstrap JS (bundle includes Popper) #}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+{# Block for additional scripts #}
+{% block scripts %}{% endblock %}
 
 </body>
 </html>
