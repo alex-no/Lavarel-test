@@ -2,18 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\VerificationController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('welcome', [
-        'title' => 'Welcome Page',
-        'name' => 'Alex',
-        'locale' => app()->getLocale(),
-        'loginRouteExists' => Route::has('login'),
-        'registerRouteExists' => Route::has('register'),
-        'isAuthenticated' => Auth::check(),
-    ]);
-});
+Route::get('/', [HomeController::class, 'index']);
 
 // Route for email verification
 Route::get('/verify-email', [VerificationController::class, 'verify'])->name('email.verify');
