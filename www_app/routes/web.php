@@ -5,7 +5,10 @@ use App\Http\Controllers\Auth\VerificationController;
 // use L5Swagger\Http\Controllers\SwaggerController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'title' => 'Welcome Page',
+        'name' => 'Alex',
+    ]);
 });
 
 // Route for email verification
