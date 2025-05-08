@@ -70,4 +70,5 @@ Route::apiResource('/pet-breeds', PetBreedController::class);
 Route::apiResource('/pet-owners', PetOwnerController::class);
 
 Route::get('/check-db', [TestController::class, 'checkDatabaseConnection']);
+Route::get('/server-clock', [TestController::class, 'checkServerClock']);
 Route::get('/check-mail', [TestController::class, 'checkEmailSend']);

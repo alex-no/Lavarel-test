@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmMail;
-use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
+use ServerTimeClock\ServerClock;
+
 
 class TestController extends Controller
 {
@@ -53,6 +54,64 @@ class TestController extends Controller
             return response()->json([
                 'message' => 'Could not connect to the database. Please check your configuration.',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+  /**
+     * @OA\Get(
+     *     path="/api/server-clock",
+     *     summary="Get current server time",
+     *     tags={"Test"},
+     *     description="Returns the current server time and timezone",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Current server time information",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="clientName",
+     *                 type="string",
+     *                 example="IpGeoLocation"
+     *             ),
+     *             @OA\Property(
+     *                 property="now",
+     *                 type="string",
+     *                 format="date-time",
+     *                 example="2025-05-08 12:51:35"
+     *             ),
+     *             @OA\Property(
+     *                 property="timezone",
+     *                 type="string",
+     *                 example="Europe/Kyiv"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Clock service error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Unable to reach clock service")
+     *         )
+     *     )
+     * )
+     */
+    public function checkServerClock(ServerClock $clock)
+    {
+        try {
+            // $clock = app(ServerClock::class);
+            $data = [
+                'clientName' => $clock->getClientName(),
+                'now' => $clock->now()->format('Y-m-d H:i:s'),
+                'timezone' => $clock->getTimezone()->getName(),
+            ];
+            // $data = $clock->getData($clock);
+
+            return response()->json($data, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Unable to reach clock service',
+                'details' => $e->getMessage()
             ], 500);
         }
     }
