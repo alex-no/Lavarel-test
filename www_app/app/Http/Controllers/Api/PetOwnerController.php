@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\PetOwnerResource;
 use App\Http\Requests\IndexPetOwnerRequest;
+use App\Models\User;
 use App\Models\PetOwner;
 
 /**
@@ -27,6 +30,13 @@ use App\Models\PetOwner;
  */
 class PetOwnerController extends Controller
 {
+    public function __construct()
+    {
+        Gate::define('access-pets', function (User $user) {
+            return $user->hasAnyRole(['roleUser', 'roleAdmin', 'roleSuperadmin']);
+        });
+    }
+
     /**
      * Lists all PetOwner models.
      *
@@ -103,12 +113,38 @@ class PetOwnerController extends Controller
      */
     public function index(IndexPetOwnerRequest $request)
     {
-        $petOwner = PetOwner::query();
-        if ($request->user_id) {
-            $petOwner->when($request->has('user_id'), function ($query) use ($request) {
-                $query->where('user_id', $request->user_id);
-            });
+        if (Gate::denies('access-pets')) {
+            abort(403, 'You are not allowed to access this page.');
         }
+
+        $petOwner = PetOwner::query();
+
+        // Retrieving a collection of roles
+        $user = Auth::user();
+
+        $userId = $request->userId ?? null;
+        $petTypeId = $request->petTypeId ?? null;
+        $petBreedId = $request->petBreedId ?? null;
+
+        // If the user has the role "roleUser" — they can only see their own records
+        if ($user->hasRole('roleUser')) {
+            $userId = $user->id;
+        }
+
+        // If nothing is passed — restrict the user to their ID
+        if (empty($userId) && empty($petTypeId) && empty($petBreedId)) {
+            $userId = $user->id;
+        }
+
+        // Apply filters if they are set
+        $petOwner->when($userId, function ($query, $userId) {
+            return $query->where('user_id', $userId);
+        })->when($petTypeId, function ($query, $petTypeId) {
+            return $query->where('pet_type_id', $petTypeId);
+        })->when($petBreedId, function ($query, $petBreedId) {
+            return $query->where('pet_breed_id', $petBreedId);
+        });
+
         $result = $petOwner->paginate($request->get('per_page', 10)); // Default 10 records per page
 
         return PetOwnerResource::collection($result);
@@ -199,6 +235,10 @@ class PetOwnerController extends Controller
      */
     public function store(Request $request)
     {
+        if (Gate::denies('access-pets')) {
+            abort(403, 'You are not allowed to perform this action.');
+        }
+
         $validator = Validator::make($request->json()->all(), [
             'user_id' => 'integer',
             'pet_breed_id' => 'integer',

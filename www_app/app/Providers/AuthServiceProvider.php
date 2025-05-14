@@ -27,6 +27,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // Permission to access the pet controller
+        // Gate::define('access-pets', function (User $user) {
+        //     return $user->hasAnyRole(['roleUser', 'roleAdmin', 'roleSuperadmin']);
+        // });
+
         // Gate to check the pet owner
         Gate::define('petOwner', [PetOwnerGate::class, 'handle']);
 
