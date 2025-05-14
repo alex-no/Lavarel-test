@@ -132,14 +132,14 @@ class PetOwnerController extends Controller
      *         in="path",
      *         required=true,
      *         description="ID of the pet and owner",
-     *         @OA\Schema(type="integer", example=11)
+     *         @OA\Schema(type="integer", example=3)
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful response",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="id", type="integer", example=11),
+     *             @OA\Property(property="id", type="integer", example=3),
      *             @OA\Property(property="user_id", type="integer", example=1),
      *             @OA\Property(property="pet_type_id", type="integer", example=1),
      *             @OA\Property(property="pet_breed_id", type="integer", example=1),

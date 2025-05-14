@@ -64,9 +64,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::apiResource('/pet-types', PetTypeController::class);
 Route::apiResource('/pet-breeds', PetBreedController::class);
-// Route::get('/pet-breeds/{id}', [PetBreedController::class, 'show']);
-// Route::get('/pet-breeds/{petBreed}', [PetBreedController::class, 'show'])
-//     ->whereNumber('petBreed');
 Route::apiResource('/pet-owners', PetOwnerController::class);
 
 Route::get('/check-db', [TestController::class, 'checkDatabaseConnection']);

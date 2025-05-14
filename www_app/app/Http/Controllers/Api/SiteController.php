@@ -11,8 +11,8 @@ use Carbon\Carbon;
 
 /**
  * @OA\Info(
- *     title="API Documentation",
- *     version="1.0.0",
+ *     title="Laravel API-Test",
+ *     version="1.0.1",
  *     description="This is the API documentation for the Laravel application."
  * )
  */
