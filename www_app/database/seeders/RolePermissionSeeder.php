@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Models\User;
+// use App\Models\PetOwner;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -26,7 +28,7 @@ class RolePermissionSeeder extends Seeder
         // Here, we will simply create the permission
         $petOwner = Permission::firstOrCreate([
             'name' => 'petOwner',
-            'guard_name' => 'sanctum',
+            'guard_name' => 'web',
         ]);
 
         // Creating roles
@@ -35,17 +37,17 @@ class RolePermissionSeeder extends Seeder
         // $roleSuperadmin = Role::firstOrCreate(['name' => 'roleSuperadmin']);
         $roleUser = Role::firstOrCreate([
             'name' => 'roleUser',
-            'guard_name' => 'sanctum',
+            'guard_name' => 'web',
         ]);
 
         $roleAdmin = Role::firstOrCreate([
             'name' => 'roleAdmin',
-            'guard_name' => 'sanctum',
+            'guard_name' => 'web',
         ]);
 
         $roleSuperadmin = Role::firstOrCreate([
             'name' => 'roleSuperadmin',
-            'guard_name' => 'sanctum',
+            'guard_name' => 'web',
         ]);
 
         // Assign the "petOwner" permission to the "roleUser" role
@@ -59,8 +61,9 @@ class RolePermissionSeeder extends Seeder
         $roleSuperadmin->syncPermissions($roleAdmin->permissions);
 
         // If necessary — assigning roles to users
-        // User::find(1)?->assignRole('roleSuperadmin');
-        // User::find(2)?->assignRole('roleAdmin');
-        // User::find(5)?->assignRole('roleUser');
+        $user = User::find(1);
+        $user?->assignRole('roleSuperadmin');
+        User::find(2)?->assignRole('roleAdmin');
+        User::find(3)?->assignRole('roleUser');
     }
 }
