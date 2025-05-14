@@ -11,6 +11,7 @@ use App\Http\Resources\PetOwnerResource;
 use App\Http\Requests\IndexPetOwnerRequest;
 use App\Models\User;
 use App\Models\PetOwner;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
  * @OA\Tag(
@@ -30,6 +31,12 @@ use App\Models\PetOwner;
  */
 class PetOwnerController extends Controller
 {
+    use AuthorizesRequests;
+
+    /**
+     * Constructor for the PetOwnerController.
+     * Defines the access permissions for the controller.
+     */
     public function __construct()
     {
         Gate::define('access-pets', function (User $user) {
@@ -197,7 +204,12 @@ class PetOwnerController extends Controller
      */
     public function show(string $id)
     {
-        return PetOwner::findOrFail($id);
+        $petOwner = PetOwner::with(['user', 'petType', 'petBreed'])->findOrFail($id);
+
+        // $this->authorize('petOwner', $petOwner);
+        $this->authorize('view', $petOwner);
+
+        return new PetOwnerResource($petOwner);
     }
 
     /**
