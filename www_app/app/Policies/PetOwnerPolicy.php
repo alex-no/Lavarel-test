@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\PetOwner;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+// use Illuminate\Auth\Access\Response;
 
 class PetOwnerPolicy
 {
@@ -21,10 +21,7 @@ class PetOwnerPolicy
      */
     public function view(User $user, PetOwner $petOwner): bool
     {
-        // Admins and superadmins can access any record
-        // Users can only access their own records
-        return $user->hasAnyRole(['roleAdmin', 'roleSuperadmin'])
-            || ($user->hasRole('roleUser') && $petOwner->user_id === $user->id);
+        return $this->checkPersonal($user, $petOwner);
     }
 
     /**
@@ -40,7 +37,7 @@ class PetOwnerPolicy
      */
     public function update(User $user, PetOwner $petOwner): bool
     {
-        return false;
+        return $this->checkPersonal($user, $petOwner);
     }
 
     /**
@@ -48,7 +45,7 @@ class PetOwnerPolicy
      */
     public function delete(User $user, PetOwner $petOwner): bool
     {
-        return false;
+        return $this->checkPersonal($user, $petOwner, ['roleSuperadmin']);
     }
 
     /**
@@ -65,5 +62,13 @@ class PetOwnerPolicy
     public function forceDelete(User $user, PetOwner $petOwner): bool
     {
         return false;
+    }
+
+    private function checkPersonal(User $user, PetOwner $petOwner, array $adminRoles = ['roleAdmin', 'roleSuperadmin']): bool
+    {
+        // Admins and superadmins can access any record
+        // Users can only access their own records
+        return $user->hasAnyRole($adminRoles)
+            || ($user->hasRole('roleUser') && $petOwner->user_id === $user->id);
     }
 }

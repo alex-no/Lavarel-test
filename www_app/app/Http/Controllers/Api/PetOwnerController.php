@@ -127,6 +127,7 @@ class PetOwnerController extends Controller
         $petOwner = PetOwner::query();
 
         // Retrieving a collection of roles
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         $userId = $request->userId ?? null;
@@ -325,20 +326,21 @@ class PetOwnerController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $petOwner = PetOwner::findOrFail($id);
+        $this->authorize('update', $petOwner);
+
         $validator = Validator::make($request->json()->all(), [
-            'user_id' => $request->json('year_of_birth'),
-            'pet_breed_id' => $request->json('pet_breed_id'),
-            'nickname_uk' => $request->json('nickname_uk'),
-            'nickname_en' => $request->json('nickname_en'),
-            'nickname_ru' => $request->json('nickname_ru'),
-            'year_of_birth' => $request->json('year_of_birth'),
+            'user_id' => 'nullable|integer',
+            'pet_breed_id' => 'nullable|integer',
+            'nickname_uk' => 'sometimes|string|max:255',
+            'nickname_en' => 'sometimes|string|max:255',
+            'nickname_ru' => 'sometimes|string|max:255',
+            'year_of_birth' => 'sometimes|integer|min:1900|max:' . date('Y'),
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
-
-        $petOwner = PetOwner::findOrFail($id);
 
         $validData = $validator->validated();
 
@@ -382,8 +384,10 @@ class PetOwnerController extends Controller
      */
     public function destroy(string $id)
     {
-        $petType = PetOwner::findOrFail($id);
-        $petType->delete();
+        $petOwner = PetOwner::findOrFail($id);
+        $this->authorize('delete', $petOwner);
+
+        $petOwner->delete();
 
         return response()->json(null, 204);
     }
