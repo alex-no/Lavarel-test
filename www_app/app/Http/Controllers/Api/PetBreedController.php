@@ -23,6 +23,12 @@ use App\Models\PetBreed;
  */
 class PetBreedController extends Controller
 {
+    public function __construct()
+    {
+        // Only store, update, and destroy actions require authentication
+        $this->middleware('auth:sanctum')->only(['store', 'update', 'destroy']);
+    }
+
     /**
      * @OA\Get(
      *     path="/api/pet-breeds",
@@ -99,8 +105,84 @@ class PetBreedController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/pet-breeds/{id}",
+     *     summary="Retrieve a specific resource by ID",
+     *     tags={"PetBreeds"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the Pet Breed to show",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of the resource",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the requested Pet Breed"
+     *             ),
+     *             @OA\Property(
+     *                 property="pet_type_id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the Pet Breed"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_uk",
+     *                 type="string",
+     *                 example="Китайський чубатий собака",
+     *                 description="Name of the requested Pet Breed in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_en",
+     *                 type="string",
+     *                 example="Chinese Crested Dog",
+     *                 description="Name of the requested Pet Breed in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ru",
+     *                 type="string",
+     *                 example="Китайская хохлатая собака",
+     *                 description="Name of the requested Pet Breed in Russian"
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the last update"
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the creation"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pet Breed not found"
+     *     )
+     * )
+     */
+    public function show(PetBreed $petBreed, string $id)
+    {
+        $petBreed = PetBreed::findOrFail($id);
+        return $petBreed;
+    }
+
+    /**
      * @OA\Post(
      *     path="/api/pet-breeds",
+     *     security={{"bearerAuth":{}}},
      *     summary="Store a new Pet Breed",
      *     description="Creates a new Pet Breed and stores it in the database.",
      *     operationId="storePetBreeds",
@@ -197,6 +279,8 @@ class PetBreedController extends Controller
      */
     public function store(StorePetBreedRequest $request)
     {
+        $this->authorizeRole();
+
         $validator = Validator::make($request->json()->all(), [
             'pet_type_id' => 'required|exists:pet_types,id',
             'name_uk' => 'required|string|max:255',
@@ -222,88 +306,9 @@ class PetBreedController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/api/pet-breeds/{id}",
-     *     summary="Retrieve a specific resource by ID",
-     *     tags={"PetBreeds"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID of the Pet Breed to show",
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful retrieval of the resource",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="id",
-     *                 type="integer",
-     *                 example="1",
-     *                 description="ID of the requested Pet Breed"
-     *             ),
-     *             @OA\Property(
-     *                 property="pet_type_id",
-     *                 type="integer",
-     *                 example="1",
-     *                 description="ID of the Pet Breed"
-     *             ),
-     *             @OA\Property(
-     *                 property="name_uk",
-     *                 type="string",
-     *                 example="Китайський чубатий собака",
-     *                 description="Name of the requested Pet Breed in Ukrainian"
-     *             ),
-     *             @OA\Property(
-     *                 property="name_en",
-     *                 type="string",
-     *                 example="Chinese Crested Dog",
-     *                 description="Name of the requested Pet Breed in English"
-     *             ),
-     *             @OA\Property(
-     *                 property="name_ru",
-     *                 type="string",
-     *                 example="Китайская хохлатая собака",
-     *                 description="Name of the requested Pet Breed in Russian"
-     *             ),
-     *             @OA\Property(
-     *                 property="updated_at",
-     *                 type="datetime",
-     *                 example="2025-03-12T20:08:04.566Z",
-     *                 description="Date and time of the last update"
-     *             ),
-     *             @OA\Property(
-     *                 property="created_at",
-     *                 type="datetime",
-     *                 example="2025-03-12T20:08:04.566Z",
-     *                 description="Date and time of the creation"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Pet Breed not found"
-     *     )
-     * )
-     */
-    // public function show(string $id)
-    // {
-    //     $petBreed = PetBreed::findOrFail($id);
-    //     return $petBreed;
-    // }
-    public function show(PetBreed $petBreed, string $id)
-    {
-        $petBreed = PetBreed::findOrFail($id);
-        return $petBreed;
-    }
-
-    /**
      * @OA\Put(
      *     path="/api/pet-breeds/{id}",
+     *     security={{"bearerAuth":{}}},
      *     summary="Update an existing Pet Breed",
      *     description="Updates the details of an existing Pet Breed by its ID.",
      *     operationId="updatePetBreed",
@@ -424,6 +429,8 @@ class PetBreedController extends Controller
     public function update(Request $request, string $id)
 //    public function update(UpdatePetBreedRequest $request, PetBreed $petBreed)
     {
+        $this->authorizeRole();
+
         $validator = Validator::make($request->json()->all(), [
             'pet_type_id' => 'sometimes|exists:pet_types,id',
             'name_uk' => 'sometimes|string|max:255',
@@ -452,6 +459,7 @@ class PetBreedController extends Controller
 /**
 * @OA\Delete(
 *     path="/api/pet-breeds/{id}",
+*     security={{"bearerAuth":{}}},
 *     summary="Delete a Pet Breed",
 *     description="Deletes a PetBreed by its ID",
 *     operationId="destroyPetBreed",
@@ -503,6 +511,8 @@ class PetBreedController extends Controller
     public function destroy(string $id)
     // public function destroy(PetBreed $petBreed)
     {
+        $this->authorizeRole(['roleSuperadmin']);
+
         $petBreed = PetBreed::findOrFail($id);
         $petBreed->delete();
 
