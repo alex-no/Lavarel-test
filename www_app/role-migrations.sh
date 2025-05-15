@@ -10,3 +10,4 @@ php artisan migrate
 php artisan db:seed --class=RolePermissionSeeder
 
 # php artisan make:rule PetOwnerRule
+# php artisan make:policy PetOwnerPolicy --model=PetOwner
