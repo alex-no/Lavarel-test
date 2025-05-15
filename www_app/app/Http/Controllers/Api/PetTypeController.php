@@ -16,11 +16,17 @@ use App\Models\PetType;
  * @OA\Schema(
  *     schema="PetType",
  *     title="PetTypes",
- *     description="Типы животных",
+ *     description="Pet Types",
  * )
  */
 class PetTypeController extends Controller
 {
+    public function __construct()
+    {
+        // Only store, update, and destroy actions require authentication
+        $this->middleware('auth:sanctum')->only(['store', 'update', 'destroy']);
+    }
+
     /**
      * @OA\Get(
      *     path="/api/pet-types",
@@ -55,8 +61,77 @@ class PetTypeController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/pet-types/{id}",
+     *     summary="Retrieve a specific resource by ID",
+     *     tags={"PetTypes"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the Pet Type to retrieve",
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful retrieval of the resource",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 example="1",
+     *                 description="ID of the requested Pet Type"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_uk",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the requested Pet Type in Ukrainian"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_en",
+     *                 type="string",
+     *                 example="dog",
+     *                 description="Name of the requested Pet Type in English"
+     *             ),
+     *             @OA\Property(
+     *                 property="name_ru",
+     *                 type="string",
+     *                 example="собака",
+     *                 description="Name of the requested Pet Type in Russian"
+     *             ),
+     *             @OA\Property(
+     *                 property="updated_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the last update"
+     *             ),
+     *             @OA\Property(
+     *                 property="created_at",
+     *                 type="datetime",
+     *                 example="2025-03-12T20:08:04.566Z",
+     *                 description="Date and time of the creation"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Resource not found"
+     *     )
+     * )
+     */
+    public function show(string $id)
+    {
+        return PetType::findOrFail($id);
+    }
+
+    /**
      * @OA\Post(
      *     path="/api/pet-types",
+     *     security={{"bearerAuth":{}}},
      *     summary="Store a new Pet Type",
      *     description="Creates a new Pet Type and stores it in the database.",
      *     operationId="storePetTypes",
@@ -141,6 +216,8 @@ class PetTypeController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorizeRole();
+
         $validator = Validator::make($request->json()->all(), [
             'name_uk' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
@@ -164,76 +241,9 @@ class PetTypeController extends Controller
     }
 
     /**
-     * @OA\Get(
-     *     path="/api/pet-types/{id}",
-     *     summary="Retrieve a specific resource by ID",
-     *     tags={"PetTypes"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         description="ID of the Pet Type to retrieve",
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful retrieval of the resource",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="id",
-     *                 type="integer",
-     *                 example="1",
-     *                 description="ID of the requested Pet Type"
-     *             ),
-     *             @OA\Property(
-     *                 property="name_uk",
-     *                 type="string",
-     *                 example="собака",
-     *                 description="Name of the requested Pet Type in Ukrainian"
-     *             ),
-     *             @OA\Property(
-     *                 property="name_en",
-     *                 type="string",
-     *                 example="dog",
-     *                 description="Name of the requested Pet Type in English"
-     *             ),
-     *             @OA\Property(
-     *                 property="name_ru",
-     *                 type="string",
-     *                 example="собака",
-     *                 description="Name of the requested Pet Type in Russian"
-     *             ),
-     *             @OA\Property(
-     *                 property="updated_at",
-     *                 type="datetime",
-     *                 example="2025-03-12T20:08:04.566Z",
-     *                 description="Date and time of the last update"
-     *             ),
-     *             @OA\Property(
-     *                 property="created_at",
-     *                 type="datetime",
-     *                 example="2025-03-12T20:08:04.566Z",
-     *                 description="Date and time of the creation"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Resource not found"
-     *     )
-     * )
-     */
-    public function show(string $id)
-    {
-        return PetType::findOrFail($id);
-    }
-
-    /**
      * @OA\Put(
      *     path="/api/pet-types/{id}",
+     *     security={{"bearerAuth":{}}},
      *     summary="Update an existing Pet Type",
      *     description="Updates the details of an existing Pet Type by its ID.",
      *     operationId="updatePetType",
@@ -340,6 +350,8 @@ class PetTypeController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorizeRole();
+
         $validator = Validator::make($request->json()->all(), [
             'name_uk' => 'sometimes|string|max:255',
             'name_en' => 'sometimes|string|max:255',
@@ -367,6 +379,7 @@ class PetTypeController extends Controller
     /**
      * @OA\Delete(
      *     path="/api/pet-types/{id}",
+     *     security={{"bearerAuth":{}}},
      *     summary="Delete a Pet Type",
      *     description="Deletes a PetType by its ID",
      *     operationId="destroyPetType",
@@ -417,6 +430,8 @@ class PetTypeController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorizeRole(['roleSuperadmin']);
+
         $petType = PetType::findOrFail($id);
         $petType->delete();
 
