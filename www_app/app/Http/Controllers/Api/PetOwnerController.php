@@ -253,12 +253,12 @@ class PetOwnerController extends Controller
         }
 
         $validator = Validator::make($request->json()->all(), [
-            'user_id' => 'integer',
-            'pet_breed_id' => 'integer',
+            'user_id' => 'sometimes|integer',
+            'pet_breed_id' => 'sometimes|integer',
             'nickname_uk' => 'required|string|max:255',
             'nickname_en' => 'required|string|max:255',
             'nickname_ru' => 'required|string|max:255',
-            'year_of_birth' => 'integer|max:2025',
+            'year_of_birth' => 'sometimes|integer|max:2025',
         ]);
 
         if ($validator->fails()) {
@@ -266,7 +266,7 @@ class PetOwnerController extends Controller
         }
 
         $petOwner = PetOwner::create([
-            'user_id' => $request->json('year_of_birth'),
+            'user_id' => $request->json('user_id'),
             'pet_breed_id' => $request->json('pet_breed_id'),
             'nickname_uk' => $request->json('nickname_uk'),
             'nickname_en' => $request->json('nickname_en'),
