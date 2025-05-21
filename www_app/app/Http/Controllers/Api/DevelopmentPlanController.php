@@ -208,7 +208,10 @@ class DevelopmentPlanController extends Controller
         ]);
 
         $plan = DevelopmentPlan::create($validated);
-        return response()->json($plan, 201);
+
+        $response = response();
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->json($plan, 201);
     }
 
     /**
