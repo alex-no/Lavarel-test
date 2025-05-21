@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\PetTypeController;
 use App\Http\Controllers\Api\PetBreedController;
 use App\Http\Controllers\Api\PetOwnerController;
 
+use App\Http\Controllers\Api\DevelopmentPlanController;
+
 Route::get('/', [SiteController::class, 'index']);
 Route::get('/languages', [LanguageController::class, 'index']);
 Route::get('/languages/{language}', [LanguageController::class, 'show']);
@@ -65,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('/pet-types', PetTypeController::class);
 Route::apiResource('/pet-breeds', PetBreedController::class);
 Route::apiResource('/pet-owners', PetOwnerController::class);
+
+Route::apiResource('development-plan', DevelopmentPlanController::class);
 
 Route::get('/check-db', [TestController::class, 'checkDatabaseConnection']);
 Route::get('/server-clock', [TestController::class, 'checkServerClock']);
