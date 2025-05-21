@@ -12,4 +12,7 @@ return [
     'user_not_found_or_email_mismatch' => 'Пользователь не найден или электронная почта не совпадает.',
     'email_verification_success' => 'Электронная почта успешно подтверждена.',
     'you_not_authorized' => 'Вы не авторизованы.',
+    'Completed' => 'Завершено',
+    'In progress' => 'В процессе',
+    'Pending' => 'В ожидании',
 ];

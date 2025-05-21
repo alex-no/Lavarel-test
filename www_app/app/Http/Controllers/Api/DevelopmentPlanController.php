@@ -87,13 +87,15 @@ class DevelopmentPlanController extends Controller
         ->when($request->has('status'), function ($query) use ($request) {
             $query->where('status', $request->status);
         })
-        ->paginate($request->get('per_page', 10)); // Default 10 records per page
+        ->orderBy('status', 'desc')
+        ->orderBy('sort_order', 'asc')
+        ->paginate($request->get('per_page', 20)); // Default 20 records per page
 
         return DevelopmentPlanResource::collection($petBreeds);
 
-        // $plans = DevelopmentPlan::orderBy('sort_order')->get();
-        // return response()->json($plans);
     }
+    // $plans = DevelopmentPlan::orderBy('sort_order')->get();
+    // return response()->json($plans);
 
     /**
      * Display the specified single resource in the Development Plan model.

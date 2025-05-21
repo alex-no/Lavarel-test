@@ -13,4 +13,7 @@ return [
     'email_verification_success' => 'Email successfully verified.',
     'you_not_authorized' => 'You are not authorized.',
     'you_logged_out' => 'You have logged out.',
+    'Completed' => 'Completed',
+    'In progress' => 'In progress',
+    'Pending' => 'Pending',
 ];

@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Base\AdvModel;
 
-class DevelopmentPlan extends Model
+class DevelopmentPlan extends AdvModel
 {
+    /** @use HasFactory<\Database\Factories\PetBreedFactory> */
+    use HasFactory;
+
     /**
      * The table associated with the model.
      *
