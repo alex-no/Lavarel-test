@@ -93,9 +93,9 @@ class DevelopmentPlanController extends Controller
 
         $plans = DevelopmentPlanResource::collection($petBreeds);
 
-        $response = response();
+        $response = response()->json($plans);
         $response->headers->set('Content-Type', 'application/json');
-        return $response->json($plans);
+        return $response;
     }
 
     /**
@@ -212,9 +212,7 @@ class DevelopmentPlanController extends Controller
 
         $plan = DevelopmentPlan::create($validated);
 
-        $response = response();
-        $response->headers->set('Content-Type', 'application/json');
-        return $response->json($plan, 201);
+        return response()->json($plan, 201);
     }
 
     /**
