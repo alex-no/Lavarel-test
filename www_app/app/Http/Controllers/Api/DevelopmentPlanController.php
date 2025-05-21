@@ -93,10 +93,7 @@ class DevelopmentPlanController extends Controller
 
         $plans = DevelopmentPlanResource::collection($devPlans);
 
-        return response()->json(['ok' => true]);
-        // $response = response()->json($plans);
-        // $response->headers->set('Content-Type', 'application/json');
-        // return $response;
+        return  response()->json($plans);
     }
 
     /**
