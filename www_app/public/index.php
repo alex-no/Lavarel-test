@@ -1,5 +1,8 @@
 <?php
-
+$request =$_SERVER['REQUEST_URI'];
+if (substr($request, 0, 4) === 'api/' && substr($request, 0, 7) !== 'api/doc') {
+    header('Content-Type: application/json');
+}
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
