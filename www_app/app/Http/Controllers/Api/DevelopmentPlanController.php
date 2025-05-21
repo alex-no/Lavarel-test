@@ -83,7 +83,7 @@ class DevelopmentPlanController extends Controller
             'status' => 'nullable|in:pending,in_progress,completed',
         ]);
 
-        $petBreeds = DevelopmentPlan::query()
+        $devPlans = DevelopmentPlan::query()
         ->when($request->has('status'), function ($query) use ($request) {
             $query->where('status', $request->status);
         })
@@ -91,11 +91,12 @@ class DevelopmentPlanController extends Controller
         ->orderBy('sort_order', 'asc')
         ->paginate($request->get('per_page', 20)); // Default 20 records per page
 
-        $plans = DevelopmentPlanResource::collection($petBreeds);
+        $plans = DevelopmentPlanResource::collection($devPlans);
 
-        $response = response()->json($plans);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        return response()->json(['ok' => true]);
+        // $response = response()->json($plans);
+        // $response->headers->set('Content-Type', 'application/json');
+        // return $response;
     }
 
     /**
