@@ -92,7 +92,10 @@ class DevelopmentPlanController extends Controller
         ->paginate($request->get('per_page', 20)); // Default 20 records per page
 
         $plans = DevelopmentPlanResource::collection($petBreeds);
-        return response()->json($plans);
+
+        $response = response();
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->json($plans);
     }
 
     /**
