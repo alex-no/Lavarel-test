@@ -91,11 +91,9 @@ class DevelopmentPlanController extends Controller
         ->orderBy('sort_order', 'asc')
         ->paginate($request->get('per_page', 20)); // Default 20 records per page
 
-        return DevelopmentPlanResource::collection($petBreeds);
-
+        $plans = DevelopmentPlanResource::collection($petBreeds);
+        return response()->json($plans);
     }
-    // $plans = DevelopmentPlan::orderBy('sort_order')->get();
-    // return response()->json($plans);
 
     /**
      * Display the specified single resource in the Development Plan model.
@@ -151,6 +149,7 @@ class DevelopmentPlanController extends Controller
         if (!$plan) {
             return response()->json(['message' => 'Not found'], 404);
         }
+        // dd($plan);
         return response()->json($plan);
     }
 

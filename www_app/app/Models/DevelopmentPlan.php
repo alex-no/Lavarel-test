@@ -39,6 +39,14 @@ class DevelopmentPlan extends AdvModel
     ];
 
     /**
+     * The attributes that should be hidden for serialization.
+     * @var array
+     */
+    protected $hidden = [
+        'created_at',
+    ];
+
+    /**
      * The timestamp attributes for the model.
      *
      * @var boolean
@@ -55,6 +63,14 @@ class DevelopmentPlan extends AdvModel
     protected $dates = [
         'created_at',
         'updated_at',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     * @var array
+     */
+    protected $appends = [
+        'status_adv',
     ];
 
     /**
@@ -76,5 +92,16 @@ class DevelopmentPlan extends AdvModel
     {
         $advStatus = ucfirst(str_replace('_', ' ', $status));
         return (self::$statusLabels[$status] ?? '❓') . ' ' . __('messages.' . $advStatus);
+
     }
+
+    /**
+     * Get the human-readable status with icon.
+     * @return string
+     */
+    public function getStatusAdvAttribute(): string
+    {
+        return self::makeStatusAdv($this->status);
+    }
+
 }
