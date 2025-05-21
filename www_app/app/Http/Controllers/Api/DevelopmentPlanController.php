@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Resources\DevelopmentPlanResource;
 use App\Models\DevelopmentPlan;
 
 /**
@@ -76,10 +77,22 @@ class DevelopmentPlanController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $plans = DevelopmentPlan::orderBy('sort_order')->get();
-        return response()->json($plans);
+        $request->validate([
+            'status' => 'sometime|exists:status',
+        ]);
+
+        $petBreeds = DevelopmentPlan::query()
+        ->when($request->has('status'), function ($query) use ($request) {
+            $query->where('status', $request->status);
+        })
+        ->paginate($request->get('per_page', 10)); // Default 10 records per page
+
+        return DevelopmentPlanResource::collection($petBreeds);
+
+        // $plans = DevelopmentPlan::orderBy('sort_order')->get();
+        // return response()->json($plans);
     }
 
     /**

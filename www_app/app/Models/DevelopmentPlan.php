@@ -28,7 +28,7 @@ class DevelopmentPlan extends Model
         'result_en',
         'result_ru',
         'result_uk',
-        
+
         'technology_en',
         'technology_ru',
         'technology_uk',
@@ -52,4 +52,25 @@ class DevelopmentPlan extends Model
         'created_at',
         'updated_at',
     ];
+
+    /**
+     *  Example values prefix for conversion
+     * @var array<string, string>
+     */
+    private static array $statusLabels = [
+        'pending' => '⏳',
+        'in_progress' => '🔧',
+        'completed' => '✅',
+    ];
+
+    /**
+     * Make status label with icon.
+     * @param string $status
+     * @return string
+     */
+    public static function makeStatusAdv(string $status): string
+    {
+        $advStatus = ucfirst(str_replace('_', ' ', $status));
+        return (self::$statusLabels[$status] ?? '❓') . ' ' . __('messages.' . $advStatus);
+    }
 }
