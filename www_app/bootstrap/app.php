@@ -3,7 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\SetLocale;  
+use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\ForceJsonResponse;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,11 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->group('web', [
-            SetLocale::class, // Middleware for WEB
+        $middleware->group('web', [ // Middleware for WEB
+            SetLocale::class,
         ]);
-        $middleware->group('api', [
-            SetLocale::class, // Middleware for API
+        $middleware->group('api', [ // Middleware for API
+            SetLocale::class,
+            ForceJsonResponse::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
