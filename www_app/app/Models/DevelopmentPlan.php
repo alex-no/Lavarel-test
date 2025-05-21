@@ -18,17 +18,20 @@ class DevelopmentPlan extends Model
      * @var array
      */
     protected $fillable = [
+        'sort_order',
+        'status',
+
         'feature_en',
         'feature_ru',
         'feature_uk',
+
         'result_en',
         'result_ru',
         'result_uk',
+        
         'technology_en',
         'technology_ru',
         'technology_uk',
-        'sort_order',
-        'status',
     ];
 
     /**
