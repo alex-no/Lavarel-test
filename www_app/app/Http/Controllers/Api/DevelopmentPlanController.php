@@ -80,7 +80,7 @@ class DevelopmentPlanController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'status' => 'sometime|exists:status',
+            'status' => 'nullable|in:pending,in_progress,completed',
         ]);
 
         $petBreeds = DevelopmentPlan::query()
