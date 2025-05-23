@@ -27,36 +27,39 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: ['modelValue'],
-  data() {
-    return {
-      languages: [],
-      currentLanguage: null
-    }
-  },
-  emits: ['update:modelValue'],
-  mounted() {
-    this.fetchLanguages()
-  },
-  methods: {
-    async fetchLanguages() {
-      try {
-        const res = await fetch('https://www.laravel.4n.com.ua/api/languages')
-        const data = await res.json()
-        this.languages = data.data
-        this.currentLanguage = this.languages.find(l => l.code === this.modelValue)
-      } catch (e) {
-        console.error('Error loading languages:', e)
-      }
-    },
-    changeLanguage(code) {
-      this.$emit('update:modelValue', code)
-      this.currentLanguage = this.languages.find(l => l.code === code)
-    }
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
+
+const languages = ref([])
+const currentLanguage = ref(null)
+
+watch(
+  () => props.modelValue,
+  (newCode) => {
+    currentLanguage.value = languages.value.find((l) => l.code === newCode)
+  }
+)
+
+async function fetchLanguages() {
+  try {
+    const res = await fetch('https://www.laravel.4n.com.ua/api/languages')
+    const data = await res.json()
+    languages.value = data.data
+    currentLanguage.value = languages.value.find((l) => l.code === props.modelValue)
+  } catch (e) {
+    console.error('Error loading languages:', e)
   }
 }
+
+function changeLanguage(code) {
+  emit('update:modelValue', code)
+  currentLanguage.value = languages.value.find((l) => l.code === code)
+}
+
+onMounted(fetchLanguages)
 </script>
 
 <style scoped>

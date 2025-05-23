@@ -13,3 +13,5 @@ Route::get('/verify-email', [VerificationController::class, 'verify'])->name('em
 //     ->name('verification.verify');
 
 // Route::get('/api/documentation', [SwaggerController::class, 'api']);
+
+Route::get('/{any}', fn () => file_get_contents(public_path('html/index.html')))->where('any', '.*');
