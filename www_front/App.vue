@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>План розробки</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+</head>
+<body>
+<div id="app" class="container py-5">
+  <LanguageSwitcher v-model="selectedLang" />  
+  <h1 class="mb-4">План розробки</h1>
+
+  <div v-if="loading" class="text-center">
+    <div class="spinner-border" role="status"></div>
+    <span class="ms-2">Завантаження...</span>
+  </div>
+
+  <div v-if="error" class="alert alert-danger">{{ error }}</div>
+
+  <div v-if="!loading && !error">
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Фіча</th>
+          <th>Технології</th>
+          <th>Статус</th>
+          <th>Оновлено</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in items" :key="item.id">
+          <td>{{ item.sort_order }}</td>
+          <td>{{ item.feature }}</td>
+          <td>{{ item.technology }}</td>
+          <td>{{ item.status_adv }}</td>
+          <td>{{ item.updated }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav>
+      <ul class="pagination justify-content-center">
+        <li 
+          class="page-item"
+          :class="{ disabled: !pagination.prev }"
+        >
+          <button class="page-link" @click="loadPage(pagination.prev)" :disabled="!pagination.prev">
+            &laquo;
+          </button>
+        </li>
+
+        <li 
+          v-for="link in meta.links" 
+          :key="link.label" 
+          class="page-item" 
+          :class="{ active: link.active, disabled: link.url === null || link.label.includes('pagination') }"
+        >
+          <button class="page-link" @click="loadPage(link.url)" :disabled="!link.url || link.label.includes('pagination')">
+            {{ formatLabel(link.label) }}
+          </button>
+        </li>
+
+        <li 
+          class="page-item"
+          :class="{ disabled: !pagination.next }"
+        >
+          <button class="page-link" @click="loadPage(pagination.next)" :disabled="!pagination.next">
+            &raquo;
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- Vue 3 -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      items: [],
+      loading: true,
+      error: null,
+      pagination: {
+        next: null,
+        prev: null
+      },
+      meta: {
+        links: []
+      },
+      baseUrl: '/api/development-plan'
+    };
+  },
+  mounted() {
+    this.fetchData(this.baseUrl);
+  },
+  methods: {
+    fetchData(url) {
+      this.loading = true;
+      this.error = null;
+
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error('Network response was not ok');
+          return response.json();
+        })
+        .then(data => {
+          this.items = data.data;
+          this.pagination.next = data.links.next;
+          this.pagination.prev = data.links.prev;
+          this.meta = data.meta;
+        })
+        .catch(err => {
+          console.error(err);
+          this.error = 'Не вдалося завантажити дані.';
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    loadPage(url) {
+      if (url) this.fetchData(url);
+    },
+    formatLabel(label) {
+      if (label === 'pagination.previous') return '← Назад';
+      if (label === 'pagination.next') return 'Вперед →';
+      return label;
+    }
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
