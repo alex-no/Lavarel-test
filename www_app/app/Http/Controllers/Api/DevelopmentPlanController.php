@@ -93,7 +93,15 @@ class DevelopmentPlanController extends Controller
 
         $plans = DevelopmentPlanResource::collection($devPlans);
 
-        return  response()->json($plans);
+        return $plans->additional([
+            'meta' => [
+                'totalCount' => $devPlans->total(),
+                'pageCount' => $devPlans->lastPage(),
+                'currentPage' => $devPlans->currentPage(),
+                'perPage' => $devPlans->perPage(),
+            ],
+        ]);
+        // return response()->json($plans);
     }
 
     /**
