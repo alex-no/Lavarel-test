@@ -1,0 +1,17 @@
+{
+  "name": "laravel-dev-plan-viewer",
+  "version": "1.0.0",
+  "description": "Vue frontend for Laravel development plan viewer",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --outDir /app/dist",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.0.0"
+  }
+}

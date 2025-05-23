@@ -8,6 +8,17 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: laravel_frontend
+    working_dir: /app
+    volumes:
+      - ./www_front:/app
+      - ./www_app/public/html:/app/dist
+    command: ["sh", "-c", "npm install && npm run build"]
+
   web:
     image: alex0no/laravel-nginx:latest
     container_name: laravel_web
