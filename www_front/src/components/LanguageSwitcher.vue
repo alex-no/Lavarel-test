@@ -30,7 +30,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 
-const props = defineProps(['modelValue'])
+const props = defineProps({ modelValue: String })
 const emit = defineEmits(['update:modelValue'])
 
 const languages = ref([])
@@ -55,6 +55,7 @@ async function fetchLanguages() {
 }
 
 function changeLanguage(code) {
+  console.log('clicked', code)
   emit('update:modelValue', code)
   currentLanguage.value = languages.value.find((l) => l.code === code)
 }

@@ -81,12 +81,13 @@ const selectedLang = ref('uk')
 const baseUrl = '/api/development-plan'
 
 onMounted(() => {
-  fetchData(baseUrl)
+  //fetchData(baseUrl)
+  fetchData(`${baseUrl}?lang=${selectedLang.value}`)
 })
 
 watch(selectedLang, (newLang) => {
   console.log('Selected language changed to', newLang)
-  // тут можешь добавить переключение языка на клиенте
+  fetchData(`${baseUrl}?lang=${newLang}`)
 })
 
 function fetchData(url) {
