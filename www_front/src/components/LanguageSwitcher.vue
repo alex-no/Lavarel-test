@@ -45,7 +45,7 @@ watch(
 
 async function fetchLanguages() {
   try {
-    const res = await fetch('https://www.laravel.4n.com.ua/api/languages')
+    const res = await fetch('/api/languages')
     const data = await res.json()
     languages.value = data.data
     currentLanguage.value = languages.value.find((l) => l.code === props.modelValue)
