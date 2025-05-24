@@ -1,0 +1,14 @@
+{
+  "pageTitle": "Development Plan",
+  "pageLoading": "Loading",
+  "table": {
+    "columnFeature": "Feature",
+    "columnTechnology": "Technology",
+    "columnResult": "Result",
+    "columnUpdated": "Updated"
+  },
+  "pagination": {
+    "next": "Next",
+    "previous": "Previous"
+  }
+}

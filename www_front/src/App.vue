@@ -2,11 +2,11 @@
   <div class="container py-5">
     <LanguageSwitcher v-model="selectedLang" />
 
-    <h1 class="mb-4">План розробки</h1>
+    <h1 class="mb-4">{{ $t('pageTitle') }}</h1>
 
     <div v-if="loading" class="text-center">
       <div class="spinner-border" role="status"></div>
-      <span class="ms-2">Завантаження...</span>
+      <span class="ms-2">{{ $t('pageLoading') }}...</span>
     </div>
 
     <div v-if="error" class="alert alert-danger">{{ error }}</div>
@@ -16,10 +16,11 @@
         <thead class="table-dark">
           <tr>
             <th>#</th>
-            <th>Фіча</th>
-            <th>Технології</th>
-            <th>Статус</th>
-            <th>Оновлено</th>
+            <th>{{ $t('table.columnFeature') }}</th>
+            <th>{{ $t('table.columnTechnology') }}</th>
+            <th>{{ $t('table.columnResult') }}</th>
+            <th>{{ $t('table.columnStatus') }}</th>
+            <th>{{ $t('table.columnUpdated') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
             <td>{{ item.sort_order }}</td>
             <td>{{ item.feature }}</td>
             <td>{{ item.technology }}</td>
+            <td>{{ item.result }}</td>
             <td>{{ item.status_adv }}</td>
             <td>{{ item.updated }}</td>
           </tr>
@@ -77,7 +79,7 @@ const error = ref(null)
 const pagination = ref({ next: null, prev: null })
 const meta = ref({ links: [] })
 
-const selectedLang = ref('uk')
+const selectedLang = ref('en')
 const baseUrl = '/api/development-plan'
 
 onMounted(() => {

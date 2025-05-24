@@ -1,0 +1,15 @@
+{
+  "pageTitle": "План розробки",
+  "pageLoading": "Завантаження",
+  "table": {
+    "columnFeature": "Функція",
+    "columnTechnology": "Технологія",
+    "columnResult": "Результат",
+    "columnStatus": "Статус",
+    "columnUpdated": "Оновлено"
+  },
+  "pagination": {
+    "next": "Next",
+    "previous": "Previous"
+  }
+}
