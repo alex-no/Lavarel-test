@@ -88,7 +88,6 @@ onMounted(() => {
 })
 
 watch(selectedLang, (newLang) => {
-  console.log('Selected language changed to', newLang)
   fetchData(`${baseUrl}?lang=${newLang}`)
 })
 

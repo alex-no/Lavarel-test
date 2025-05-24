@@ -36,10 +36,54 @@ const emit = defineEmits(['update:modelValue'])
 const languages = ref([])
 const currentLanguage = ref(null)
 
+function detectLanguage() {
+  const candidates = [
+    () => {
+      const params = new URLSearchParams(window.location.search)
+      return params.get('lang')
+    },
+    () => localStorage.getItem('selected_language'),
+    () => {
+      const match = document.cookie.match(/(?:^| )selected_language=([^;]+)/)
+      return match ? decodeURIComponent(match[1]) : null
+    },
+    () => navigator.language?.split('-')[0],
+    () => 'en',
+  ]
+
+  for (const getLang of candidates) {
+    const code = getLang()
+    if (code && languages.value.find((l) => l.code === code)) {
+      return code
+    }
+  }
+
+  return 'en'
+}
+
+function saveLanguage(code, days = 365) {
+  const name = 'selected_language'
+  currentLanguage.value = languages.value.find((l) => l.code === code)
+
+  // Save to localStorage
+  localStorage.setItem('selected_language', code)
+
+  // Save to cookie
+  const expires = new Date(Date.now() + days * 86400 * 1000).toUTCString()
+  document.cookie = `${name}=${encodeURIComponent(code)}; expires=${expires}; path=/`
+}
+
+function changeLanguage(code) {
+  saveLanguage(code)
+  emit('update:modelValue', code)
+}
+
 watch(
   () => props.modelValue,
   (newCode) => {
-    currentLanguage.value = languages.value.find((l) => l.code === newCode)
+    if (newCode) {
+      saveLanguage(newCode)
+    }
   }
 )
 
@@ -48,16 +92,13 @@ async function fetchLanguages() {
     const res = await fetch('/api/languages')
     const data = await res.json()
     languages.value = data.data
-    currentLanguage.value = languages.value.find((l) => l.code === props.modelValue)
+
+    const detectedLang = detectLanguage()
+    currentLanguage.value = languages.value.find((l) => l.code === detectedLang)
+    emit('update:modelValue', detectedLang)
   } catch (e) {
     console.error('Error loading languages:', e)
   }
-}
-
-function changeLanguage(code) {
-  console.log('clicked', code)
-  emit('update:modelValue', code)
-  currentLanguage.value = languages.value.find((l) => l.code === code)
 }
 
 onMounted(fetchLanguages)
