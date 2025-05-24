@@ -6,6 +6,7 @@
     "columnFeature": "Feature",
     "columnTechnology": "Technology",
     "columnResult": "Result",
+    "columnStatus": "Status",
     "columnUpdated": "Updated"
   },
   "pagination": {
