@@ -6,9 +6,11 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 import { createI18n } from 'vue-i18n'
 import messages from './locales'
+import { detectLanguage } from './utils/detect_language'
 
 const i18n = createI18n({
-  locale: 'en',
+  legacy: false,
+  locale: detectLanguage(),
   fallbackLocale: 'en',
   messages
 })

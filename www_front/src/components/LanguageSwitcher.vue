@@ -29,37 +29,14 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { detectLanguage } from '@/utils/detect_language'
 
+const selectedLang = ref(detectLanguage())
 const props = defineProps({ modelValue: String })
 const emit = defineEmits(['update:modelValue'])
 
 const languages = ref([])
 const currentLanguage = ref(null)
-
-function detectLanguage() {
-  const candidates = [
-    () => {
-      const params = new URLSearchParams(window.location.search)
-      return params.get('lang')
-    },
-    () => localStorage.getItem('selected_language'),
-    () => {
-      const match = document.cookie.match(/(?:^| )selected_language=([^;]+)/)
-      return match ? decodeURIComponent(match[1]) : null
-    },
-    () => navigator.language?.split('-')[0],
-    () => 'en',
-  ]
-
-  for (const getLang of candidates) {
-    const code = getLang()
-    if (code && languages.value.find((l) => l.code === code)) {
-      return code
-    }
-  }
-
-  return 'en'
-}
 
 function saveLanguage(code, days = 365) {
   const name = 'selected_language'

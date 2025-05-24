@@ -72,7 +72,9 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
+import { useI18n } from 'vue-i18n'
 
+const { locale } = useI18n()
 const items = ref([])
 const loading = ref(true)
 const error = ref(null)
@@ -88,6 +90,7 @@ onMounted(() => {
 })
 
 watch(selectedLang, (newLang) => {
+  locale.value = newLang
   fetchData(`${baseUrl}?lang=${newLang}`)
 })
 
@@ -108,7 +111,7 @@ function fetchData(url) {
     })
     .catch((err) => {
       console.error(err)
-      error.value = $t('pageLoadingError')
+      error.value = t('pageLoadingError')
     })
     .finally(() => {
       loading.value = false
