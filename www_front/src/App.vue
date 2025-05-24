@@ -51,7 +51,7 @@
           >
             <button
               class="page-link"
-              @click="loadPage(link.url)"
+              @click="loadPage(getPageFromUrl(link.url))"
               :disabled="!link.url || link.label.includes('pagination')"
             >
               {{ formatLabel(link.label) }}
@@ -74,39 +74,63 @@ import { ref, onMounted, watch } from 'vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
 import { useI18n } from 'vue-i18n'
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const items = ref([])
 const loading = ref(true)
 const error = ref(null)
 const pagination = ref({ next: null, prev: null })
 const meta = ref({ links: [] })
 
-const selectedLang = ref('en')
+// Get language and page from URL on startup
+function getQueryParam(name) {
+  return new URLSearchParams(window.location.search).get(name)
+}
+
+const selectedLang = ref(getQueryParam('lang') || 'en')
+const currentPage = ref(Number(getQueryParam('page')) || 1)
+
 const baseUrl = '/api/development-plan'
 
 onMounted(() => {
-  //fetchData(baseUrl)
-  fetchData(`${baseUrl}?lang=${selectedLang.value}`)
+  locale.value = selectedLang.value
+  fetchData(selectedLang.value, currentPage.value)
 })
 
 watch(selectedLang, (newLang) => {
   locale.value = newLang
-  fetchData(`${baseUrl}?lang=${newLang}`)
+  currentPage.value = 1 // When changing the language, you can reset to the 1st page or keep the current one — your choice
+  updateUrl({ lang: newLang, page: currentPage.value })
+  fetchData(newLang, currentPage.value)
 })
 
-function fetchData(url) {
+function loadPage(page) {
+  if (!page) return
+  currentPage.value = page
+  updateUrl({ lang: selectedLang.value, page })
+  fetchData(selectedLang.value, page)
+}
+
+// Update the URL without reloading, so parameters are always in the address
+function updateUrl({ lang, page }) {
+  const url = new URL(window.location.href)
+  url.searchParams.set('lang', lang)
+  url.searchParams.set('page', page)
+  window.history.replaceState(null, '', url.toString())
+}
+
+function fetchData(lang, page) {
   loading.value = true
   error.value = null
 
-  fetch(url)
+  fetch(`${baseUrl}?lang=${lang}&page=${page}`)
     .then((response) => {
       if (!response.ok) throw new Error('Network error')
       return response.json()
     })
     .then((data) => {
       items.value = data.data
-      pagination.value.next = data.links.next
-      pagination.value.prev = data.links.prev
+      pagination.value.next = data.links.next ? getPageFromUrl(data.links.next) : null
+      pagination.value.prev = data.links.prev ? getPageFromUrl(data.links.prev) : null
       meta.value = data.meta
     })
     .catch((err) => {
@@ -118,8 +142,14 @@ function fetchData(url) {
     })
 }
 
-function loadPage(url) {
-  if (url) fetchData(url)
+// The API returns links with ?page=... — extract the page number from the link
+function getPageFromUrl(url) {
+  try {
+    const u = new URL(url, window.location.origin)
+    return Number(u.searchParams.get('page')) || 1
+  } catch {
+    return null
+  }
 }
 
 function formatLabel(label) {
