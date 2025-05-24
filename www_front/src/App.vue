@@ -35,36 +35,7 @@
         </tbody>
       </table>
 
-      <nav>
-        <ul class="pagination justify-content-center">
-          <li class="page-item" :class="{ disabled: !pagination.prev }">
-            <button class="page-link" @click="loadPage(pagination.prev)" :disabled="!pagination.prev">
-              &laquo;
-            </button>
-          </li>
-
-          <li
-            v-for="link in meta.links"
-            :key="link.label"
-            class="page-item"
-            :class="{ active: link.active, disabled: !link.url || link.label.includes('pagination') }"
-          >
-            <button
-              class="page-link"
-              @click="loadPage(getPageFromUrl(link.url))"
-              :disabled="!link.url || link.label.includes('pagination')"
-            >
-              {{ formatLabel(link.label) }}
-            </button>
-          </li>
-
-          <li class="page-item" :class="{ disabled: !pagination.next }">
-            <button class="page-link" @click="loadPage(pagination.next)" :disabled="!pagination.next">
-              &raquo;
-            </button>
-          </li>
-        </ul>
-      </nav>
+      <Pagination :pagination="pagination" :meta="meta" @load="loadPage" />
     </div>
   </div>
 </template>
@@ -73,6 +44,7 @@
 import { ref, onMounted, watch } from 'vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
 import { useI18n } from 'vue-i18n'
+import Pagination from './components/Pagination.vue'
 
 const { locale, t } = useI18n()
 const items = ref([])
