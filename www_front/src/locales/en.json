@@ -1,6 +1,7 @@
 {
   "pageTitle": "Development Plan",
   "pageLoading": "Loading",
+  "pageLoadingError": "Failed to load data.",
   "table": {
     "columnFeature": "Feature",
     "columnTechnology": "Technology",

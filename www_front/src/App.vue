@@ -109,7 +109,7 @@ function fetchData(url) {
     })
     .catch((err) => {
       console.error(err)
-      error.value = 'Не вдалося завантажити дані.'
+      error.value = $t('pageLoadingError')
     })
     .finally(() => {
       loading.value = false
