@@ -36,3 +36,4 @@ auth.json
 /doc/ssh/*.ppk
 /www_app/storage/api-docs/api-docs.json
 /www_app/tmp
+/www_front/rebuild.bat

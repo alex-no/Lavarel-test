@@ -15,7 +15,7 @@
       >
         <button
           class="page-link"
-          @click="$emit('load', link.url)"
+          @click="$emit('load', getPageFromUrl(link.url))"
           :disabled="!link.url || link.label.includes('pagination')"
         >
           {{ formatLabel(link.label) }}
@@ -32,14 +32,30 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 defineProps({
   pagination: Object,
   meta: Object
 })
 
+function getPageFromUrl(url) {
+  if (!url) return null
+  const match = url.match(/[\?&]page=(\d+)/)
+  return match ? Number(match[1]) : null
+}
+
 function formatLabel(label) {
-  if (label === 'pagination.previous') return '← Назад'
-  if (label === 'pagination.next') return 'Вперед →'
+  const match =  String(label).toLowerCase().match(/previous|next/)
+  const key = match ? match[0] : null
+
+  if (key === 'previous') return `← ${t('pagination.previous')}`
+  if (key === 'next') return `${t('pagination.next')} →`
+
   return label
 }
 </script>
+
