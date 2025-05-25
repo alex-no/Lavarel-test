@@ -14,7 +14,7 @@
         :class="{ active: link.active, disabled: !link.url || link.label.includes('pagination') }"
       >
         <button
-          class="page-link"
+          class="page-link text-nowrap"
           @click="$emit('load', getPageFromUrl(link.url))"
           :disabled="!link.url || link.label.includes('pagination')"
         >
