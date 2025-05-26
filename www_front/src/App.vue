@@ -101,8 +101,12 @@ function fetchData(lang, page) {
     })
     .then((data) => {
       items.value = data.data
-      pagination.value.next = data.links.next ? getPageFromUrl(data.links.next) : null
-      pagination.value.prev = data.links.prev ? getPageFromUrl(data.links.prev) : null
+      pagination.value = {
+        next: data.links.next ? getPageFromUrl(data.links.next) : null,
+        prev: data.links.prev ? getPageFromUrl(data.links.prev) : null,
+        first: data.links.first ? getPageFromUrl(data.links.first) : null,
+        last: data.links.last ? getPageFromUrl(data.links.last) : null,
+      }
       meta.value = data.meta
     })
     .catch((err) => {

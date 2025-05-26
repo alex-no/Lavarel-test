@@ -16,12 +16,15 @@
         v-for="link in meta.links"
         :key="link.label + (link.url ?? '')"
         class="page-item"
-        :class="{ active: link.active, disabled: !link.url || link.label.includes('pagination') }"
+        :class="{ 
+          active: link.active, 
+          disabled: !link.url
+        }"
       >
         <button
           class="page-link text-nowrap"
           @click="$emit('load', getPageFromUrl(link.url))"
-          :disabled="!link.url || link.label.includes('pagination')"
+          :disabled="!link.url"
         >
           {{ formatLabel(link.label) }}
         </button>
