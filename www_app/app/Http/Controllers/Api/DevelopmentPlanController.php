@@ -89,7 +89,7 @@ class DevelopmentPlanController extends Controller
         })
         ->orderBy('status', 'desc')
         ->orderBy('sort_order', 'asc')
-        ->paginate($request->get('per_page', 10)); // Default 20 records per page
+        ->paginate($request->get('per_page', 16)); // Default 20 records per page
 
         $plans = DevelopmentPlanResource::collection($devPlans);
 
