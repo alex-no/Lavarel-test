@@ -1,15 +1,20 @@
 <template>
   <nav>
     <ul class="pagination justify-content-center">
-      <li class="page-item" :class="{ disabled: !pagination.prev }">
-        <button class="page-link" @click="$emit('load', pagination.prev)" :disabled="!pagination.prev">
+      <li class="page-item" :class="{ disabled: !pagination.first }">
+        <button
+          class="page-link"
+          @click="$emit('load', pagination.first)"
+          :disabled="!pagination.first"
+          :title="t('pagination.first')"
+        >
           &laquo;
         </button>
       </li>
 
       <li
         v-for="link in meta.links"
-        :key="link.label"
+        :key="link.label + (link.url ?? '')"
         class="page-item"
         :class="{ active: link.active, disabled: !link.url || link.label.includes('pagination') }"
       >
@@ -22,8 +27,13 @@
         </button>
       </li>
 
-      <li class="page-item" :class="{ disabled: !pagination.next }">
-        <button class="page-link" @click="$emit('load', pagination.next)" :disabled="!pagination.next">
+      <li class="page-item" :class="{ disabled: !pagination.last }">
+        <button
+          class="page-link"
+          @click="$emit('load', pagination.last)"
+          :disabled="!pagination.last"
+          :title="t('pagination.last')"
+        >
           &raquo;
         </button>
       </li>
