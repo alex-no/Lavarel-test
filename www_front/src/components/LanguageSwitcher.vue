@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-content-end align-items-center mb-3">
+  <div class="d-flex justify-content-end align-items-center mt-2 mb-2">
     <div class="btn-group">
       <button
         type="button"
@@ -29,7 +29,10 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { detectLanguage } from '@/utils/detect_language'
+
+const { locale } = useI18n() // <--- добавлено
 
 const selectedLang = ref(detectLanguage())
 const props = defineProps({ modelValue: String })
@@ -52,6 +55,7 @@ function saveLanguage(code, days = 365) {
 
 function changeLanguage(code) {
   saveLanguage(code)
+  locale.value = code
   emit('update:modelValue', code)
 }
 
@@ -60,6 +64,7 @@ watch(
   (newCode) => {
     if (newCode) {
       saveLanguage(newCode)
+      locale.value = newCode
     }
   }
 )
@@ -68,7 +73,7 @@ async function fetchLanguages() {
   try {
     const res = await fetch('/api/languages')
     const data = await res.json()
-    languages.value = data.data
+    languages.value = data
 
     const detectedLang = detectLanguage()
     currentLanguage.value = languages.value.find((l) => l.code === detectedLang)

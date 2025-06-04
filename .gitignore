@@ -37,3 +37,4 @@ auth.json
 /www_app/storage/api-docs/api-docs.json
 /www_app/tmp
 /www_front/rebuild.bat
+/www_front/tailwindcss.exe

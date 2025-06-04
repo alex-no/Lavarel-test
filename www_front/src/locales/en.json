@@ -1,7 +1,16 @@
 {
-  "pageTitle": "Development Plan",
+  "htmlTitle": "Pet-Project",
+  "title": {
+    "features": "Development Plan",
+    "login": "Login",
+    "payment": "Make a Payment",
+    "payment_result": "Payment Result"
+  },
+  "featureTitle": "Development Plan",
   "pageLoading": "Loading",
   "pageLoadingError": "Failed to load data.",
+  "attention": "Attention!",
+  "site_description": "This is a test website used for developing payment modules for various payment systems. Nothing is being sold here, and all payments are carried out in test mode using test cards only.",
   "table": {
     "columnFeature": "Feature",
     "columnTechnology": "Technology",
@@ -14,5 +23,35 @@
     "previous": "Previous",
     "first": "First page",
     "last": "Last page"
+  },
+  "form": {
+    "login": "Login",
+    "username": "Name of user",
+    "password": "Password",
+    "sign_in": "Sign In",
+    "auth_required": "You need to log in to proceed with the payment",
+
+    "make_payment": "Make a Payment",
+    "amount": "Amount",
+    "payment_system": "Payment System",
+    "pay_now": "Pay Now",
+    "to_authorize": "To the authorization page",
+
+    "payment_result": "Payment Result",
+    "order_id": "Order ID",
+    "status": "Status",
+    "another_payment": "Make another payment"
+  },
+  "payment_status": {
+    "pending": "Pending",
+    "success": "Success",
+    "fail": "Fail",
+    "cancel": "Cancel",
+    "refund": "Refund",
+    "expired": "Expired"
+  },
+  "error": {
+    "unexpected_error": "Unexpected server error",
+    "network_error": "Network error or server not responding"
   }
 }

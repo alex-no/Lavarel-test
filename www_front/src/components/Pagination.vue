@@ -1,11 +1,11 @@
 <template>
   <nav>
     <ul class="pagination justify-content-center">
-      <li class="page-item" :class="{ disabled: !pagination.first }">
+      <li class="page-item" :class="{ disabled: !meta.links.first }">
         <button
           class="page-link"
-          @click="$emit('load', pagination.first)"
-          :disabled="!pagination.first"
+          @click="$emit('load', getPageFromUrl(meta.links.first))"
+          :disabled="!meta.links.first"
           :title="t('pagination.first')"
         >
           &laquo;
@@ -13,28 +13,25 @@
       </li>
 
       <li
-        v-for="link in meta.links"
+        v-for="link in meta.pageLinks"
         :key="link.label + (link.url ?? '')"
         class="page-item"
-        :class="{ 
-          active: link.active, 
-          disabled: !link.url
-        }"
+        :class="{ active: link.active, disabled: !link.url || link.label.includes('pagination') }"
       >
         <button
           class="page-link text-nowrap"
           @click="$emit('load', getPageFromUrl(link.url))"
-          :disabled="!link.url"
+          :disabled="!link.url || link.label.includes('pagination')"
         >
           {{ formatLabel(link.label) }}
         </button>
       </li>
 
-      <li class="page-item" :class="{ disabled: !pagination.last }">
+      <li class="page-item" :class="{ disabled: !meta.links.last }">
         <button
           class="page-link"
-          @click="$emit('load', pagination.last)"
-          :disabled="!pagination.last"
+          @click="$emit('load', getPageFromUrl(meta.links.last))"
+          :disabled="!meta.links.last"
           :title="t('pagination.last')"
         >
           &raquo;
@@ -45,7 +42,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -71,4 +67,3 @@ function formatLabel(label) {
   return label
 }
 </script>
-

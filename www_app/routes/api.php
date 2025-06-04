@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\TestController;
 use App\Http\Controllers\Api\PetTypeController;
 use App\Http\Controllers\Api\PetBreedController;
 use App\Http\Controllers\Api\PetOwnerController;
+use App\Http\Controllers\Api\PaymentController;
 
 use App\Http\Controllers\Api\DevelopmentPlanController;
 
@@ -67,6 +68,12 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('/pet-types', PetTypeController::class);
 Route::apiResource('/pet-breeds', PetBreedController::class);
 Route::apiResource('/pet-owners', PetOwnerController::class);
+
+Route::prefix('payments')->controller(PaymentController::class)->group(function () {
+    Route::post('/', 'create');
+    Route::post('/handle', 'handle');
+    Route::get('/result', 'result');
+});
 
 Route::apiResource('development-plan', DevelopmentPlanController::class);
 
