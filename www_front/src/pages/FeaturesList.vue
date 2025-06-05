@@ -94,9 +94,9 @@ function fetchData(lang, page) {
       return response.json()
     })
     .then((data) => {
-      items.value = data.items
-      meta.value = data._meta
-      const links = data._meta.links || {}
+      items.value = data.data
+      meta.value = data.meta
+      const links = data.meta.links || {}
       pagination.value.next = links.next ? getPageFromUrl(links.next) : null
       pagination.value.prev = links.prev ? getPageFromUrl(links.prev) : null
     })
