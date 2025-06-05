@@ -34,7 +34,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/register",
+     *     path="/api/auth/register",
      *     summary="Register a new user",
      *     tags={"Authentication"},
      *     description="Creates a new user and returns the data",
@@ -102,7 +102,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/login",
+     *     path="/api/auth/login",
      *     summary="User login",
      *     description="Authenticate user and return a JWT token",
      *     tags={"Authentication"},

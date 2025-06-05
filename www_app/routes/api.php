@@ -23,8 +23,8 @@ Route::post('/languages', [LanguageController::class, 'store']);
 Route::match(['put', 'patch'], '/languages/{language}', [LanguageController::class, 'update']);
 Route::get('/current-language', [LanguageController::class, 'getCurrentLanguage']);
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
 // Route::get('/user', function (Request $request) {

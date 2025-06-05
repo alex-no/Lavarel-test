@@ -32,7 +32,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { detectLanguage } from '@/utils/detect_language'
 
-const { locale } = useI18n() // <--- добавлено
+const { locale } = useI18n()
 
 const selectedLang = ref(detectLanguage())
 const props = defineProps({ modelValue: String })
@@ -73,7 +73,7 @@ async function fetchLanguages() {
   try {
     const res = await fetch('/api/languages')
     const data = await res.json()
-    languages.value = data
+    languages.value = data.data
 
     const detectedLang = detectLanguage()
     currentLanguage.value = languages.value.find((l) => l.code === detectedLang)

@@ -14,10 +14,10 @@
 
     <div class="mb-4 flex justify-center items-center">
       <label class="me-3 text-sm text-right font-medium text-gray-700 w-[160px]">
-        {{ $t('form.username') }}
+        {{ $t('form.email') }}
       </label>
       <input
-        v-model="username"
+        v-model="email"
         type="text"
         class="border border-gray-300 p-2 rounded-md w-[150px]"
         required
@@ -52,7 +52,7 @@
 import { ref, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-const username = ref('');
+const email = ref('');
 const password = ref('');
 const router = useRouter();
 const route = useRoute();
@@ -66,7 +66,7 @@ const handleLogin = async () => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      username: username.value,
+      email: email.value,
       password: password.value
     })
   });
