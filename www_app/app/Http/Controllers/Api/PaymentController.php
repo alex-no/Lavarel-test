@@ -174,6 +174,13 @@ class PaymentController extends Controller
      *     summary="API Payments Result",
      *     description="Returns information about Payment Result.",
      *     tags={"Payment"},
+     *     @OA\Parameter(
+     *         name="orderId",
+     *         in="query",
+     *         required=true,
+     *         description="Order ID to get payment result for",
+     *         @OA\Schema(type="string", example="ORD-20250529-045325-abcd1234")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Processed payment result",
