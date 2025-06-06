@@ -33,7 +33,7 @@
         </tbody>
       </table>
 
-      <Pagination :pagination="pagination" :meta="meta" @load="loadPage" />
+      <Pagination :pagination="pagination" :meta="meta" :links="links" @load="loadPage" />
     </div>
   </div>
 </template>
@@ -49,6 +49,7 @@ const loading = ref(true)
 const error = ref(null)
 const pagination = ref({ next: null, prev: null })
 const meta = ref({ links: [] })
+const links = ref([])
 
 function getQueryParam(name) {
   return new URLSearchParams(window.location.search).get(name)
@@ -96,7 +97,7 @@ function fetchData(lang, page) {
     .then((data) => {
       items.value = data.data
       meta.value = data.meta
-      const links = data.meta.links || {}
+      links.value = data.links || {}
       pagination.value.next = links.next ? getPageFromUrl(links.next) : null
       pagination.value.prev = links.prev ? getPageFromUrl(links.prev) : null
     })

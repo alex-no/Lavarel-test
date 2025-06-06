@@ -1,11 +1,11 @@
 <template>
   <nav>
     <ul class="pagination justify-content-center">
-      <li class="page-item" :class="{ disabled: !meta.links.first }">
+      <li class="page-item" :class="{ disabled: !links.first }">
         <button
           class="page-link"
-          @click="$emit('load', getPageFromUrl(meta.links.first))"
-          :disabled="!meta.links.first"
+          @click="$emit('load', getPageFromUrl(links.first))"
+          :disabled="!links.first"
           :title="t('pagination.first')"
         >
           &laquo;
@@ -13,7 +13,7 @@
       </li>
 
       <li
-        v-for="link in meta.pageLinks"
+        v-for="link in meta.links"
         :key="link.label + (link.url ?? '')"
         class="page-item"
         :class="{ active: link.active, disabled: !link.url || link.label.includes('pagination') }"
@@ -27,11 +27,11 @@
         </button>
       </li>
 
-      <li class="page-item" :class="{ disabled: !meta.links.last }">
+      <li class="page-item" :class="{ disabled: !links.last }">
         <button
           class="page-link"
-          @click="$emit('load', getPageFromUrl(meta.links.last))"
-          :disabled="!meta.links.last"
+          @click="$emit('load', getPageFromUrl(links.last))"
+          :disabled="!links.last"
           :title="t('pagination.last')"
         >
           &raquo;
@@ -48,7 +48,8 @@ const { t } = useI18n()
 
 defineProps({
   pagination: Object,
-  meta: Object
+  meta: Object,
+  links: Object
 })
 
 function getPageFromUrl(url) {
