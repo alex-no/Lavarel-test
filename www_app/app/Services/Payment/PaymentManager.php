@@ -2,7 +2,7 @@
 
 namespace App\Services\Payment;
 
-use App\Contracts\Payment\PaymentInterface;
+use App\Services\Payment\PaymentInterface;
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 

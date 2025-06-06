@@ -91,7 +91,6 @@ class PaymentController extends Controller
             $order->update(['amount' => $request->amount]);
         }
 
-        // Подключение драйвера оплаты будет позже
         $paymentData = app('payment')->getDriver()->createPayment([
             'order_id'    => $orderId,
             'amount'      => $order->amount,

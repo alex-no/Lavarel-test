@@ -2,7 +2,7 @@
 
 namespace App\Services\Payment\Drivers;
 
-use App\Contracts\Payment\PaymentInterface;
+use App\Services\Payment\PaymentInterface;
 
 class LiqPayDriver implements PaymentInterface
 {
