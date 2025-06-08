@@ -27,8 +27,48 @@ class PaymentController extends Controller
     }
 
     /**
-     * @OA\Post(
+     * Returns the list of available payment drivers and the default one.
+     *
+     * @OA\Get(
      *     path="/api/payments",
+     *     summary="Get list of available payment drivers and default one",
+     *     tags={"Payment"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of available drivers and default driver",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="drivers",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="paypal"),
+     *                 @OA\Items(type="string", example="liqpay")
+     *             ),
+     *             @OA\Property(
+     *                 property="default",
+     *                 type="string",
+     *                 example="paypal"
+     *             )
+     *         )
+     *     )
+     * )
+     *
+     * @return array
+     */
+    public function drivers(): array
+    {
+        $drivers = config('payment.drivers', []);
+        $default = config('payment.default');
+
+        return [
+            'drivers' => array_keys($drivers),
+            'default' => $default,
+        ];
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/payments/create",
      *     security={{"bearerAuth":{}}},
      *     summary="API Create New Payment",
      *     description="Returns information about New Payment.",
@@ -60,12 +100,14 @@ class PaymentController extends Controller
     {
         $request->validate([
             'amount' => 'required|numeric',
+            'currency' => 'required|string',
             'pay_system' => 'required|string',
             'order_id' => 'nullable|string|max:64',
         ]);
 
         $user = Auth::user();
         $orderId = $request->input('order_id');
+        $driverName = $request->input('pay_system');
 
         if (empty($orderId)) {
             $orderId = 'ORD-' . now()->format('Ymd-His') . '-' . Str::random(6);
@@ -73,9 +115,6 @@ class PaymentController extends Controller
             $order = Order::create([
                 'user_id'     => $user->id,
                 'order_id'    => $orderId,
-                'amount'      => $request->amount,
-                'currency'    => 'UAH',
-                'description' => 'Payment for Order #' . $orderId,
             ]);
         } else {
             $order = Order::where('order_id', $orderId)->first();
@@ -89,14 +128,17 @@ class PaymentController extends Controller
             }
 
             $order->update(['amount' => $request->amount]);
+            $order->update(['currency' => $request->currency]);
+            $order->update(['pay_system' => $driverName]);
+            $order->update(['description' => 'Payment for Order #' . $orderId]);
         }
 
-        $paymentData = app('payment')->getDriver()->createPayment([
+        // Creating a payment via PaymentManager
+        $paymentData = app('payment')->getDriver($driverName)->createPayment([
             'order_id'    => $orderId,
             'amount'      => $order->amount,
             'currency'    => $order->currency,
             'description' => $order->description,
-            'result_url'  => config('app.url') . '/api/payments/success',
         ]);
 
         return response()->json([
@@ -200,6 +242,9 @@ class PaymentController extends Controller
         $orderId = $request->query('orderId');
 
         $order = Order::where('order_id', $orderId)->firstOrFail();
+        if (!$order) {
+            throw ValidationException::withMessages(['order_id' => 'Order not found.']);
+        }
 
         return response()->json([
             'success' => $order->payment_status === 'success',

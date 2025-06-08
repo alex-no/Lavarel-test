@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services\Payment;
 
 use App\Services\Payment\PaymentInterface;
@@ -8,31 +7,25 @@ use InvalidArgumentException;
 
 class PaymentManager
 {
-    private PaymentInterface $driver;
-
-    public function __construct()
+    /**
+     * Returns the payment driver instance.
+     * This method provides access to the payment driver that has been initialized.
+     * @param string $driverName
+     * @return PaymentInterface
+     *
+     * @throws InvalidArgumentException|BindingResolutionException
+     */
+    public function getDriver($driverName): PaymentInterface
     {
-        $this->init();
-    }
-
-    private function init(): void
-    {
-        $driverName = Config::get('payment.driver');
-        $drivers = Config::get('payment.drivers');
+        $drivers = config('payment.drivers', []);
 
         if (!$driverName || !isset($drivers[$driverName])) {
             throw new InvalidArgumentException("Payment driver '$driverName' not configured.");
         }
 
-        $driverConfig = $drivers[$driverName];
-        $driverClass = $driverConfig['class'];
-        $config = $driverConfig['config'] ?? [];
+        $driverClass = $drivers[$driverName]['class'];
+        $driverConfig = $drivers[$driverName]['config'] ?? [];
 
-        $this->driver = app()->makeWith($driverClass, $config);
-    }
-
-    public function getDriver(): PaymentInterface
-    {
-        return $this->driver;
+        return app()->make($driverClass, $driverConfig);
     }
 }

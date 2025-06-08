@@ -70,7 +70,8 @@ Route::apiResource('/pet-breeds', PetBreedController::class);
 Route::apiResource('/pet-owners', PetOwnerController::class);
 
 Route::prefix('payments')->controller(PaymentController::class)->group(function () {
-    Route::post('/', 'create');
+    Route::get('/', 'drivers');
+    Route::post('/create', 'create');
     Route::post('/handle', 'handle');
     Route::get('/result', 'result');
 });
