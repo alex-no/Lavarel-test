@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import FeaturesList from '@/pages/FeaturesList.vue'
 import Login from '@/pages/Login.vue'
-import Payment from '@/pages/Payment.vue'
+import PaymentCreate from '@/pages/PaymentCreate.vue'
 import PaymentResult from '@/pages/PaymentResult.vue'
 
 const routes = [
@@ -17,8 +17,8 @@ const routes = [
     meta: { title: 'title.login' } 
   },
   { 
-    path: '/payment', 
-    component: Payment, 
+    path: '/payment-create', 
+    component: PaymentCreate, 
     meta: { title: 'title.payment' } 
   },
   { 

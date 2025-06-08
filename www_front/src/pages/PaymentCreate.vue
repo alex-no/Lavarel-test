@@ -14,14 +14,23 @@
       <label class="me-3 text-sm text-right font-medium text-gray-700 w-[160px]">
         {{ $t('form.amount') }}
       </label>
-      <input
-        v-model="amount"
-        type="number"
-        step="0.01"
-        min="0.01"
-        class="border border-gray-300 p-2 rounded-md w-[150px]"
-        required
-      />
+      <div class="flex items-center gap-2">
+        <input
+          v-model="amount"
+          type="number"
+          step="0.01"
+          min="0.01"
+          class="border border-gray-300 p-2 rounded-md w-[150px]"
+          required
+        />
+        <input
+          type="text"
+          :value="currency"
+          name="currency"
+          readonly
+          class="border border-gray-300 p-2 rounded-md w-[70px] text-center bg-gray-100"
+        />
+      </div>
     </div>
 
     <div class="mb-4 flex justify-center items-center">
@@ -30,10 +39,15 @@
       </label>
       <select
         v-model="paySystem"
-        class="border border-gray-300 p-2 rounded-md w-[150px]"
-        readonly
+        class="border border-gray-300 p-2 rounded-md w-[220px]"
       >
-        <option value="liqpay">LiqPay</option>
+        <option
+          v-for="driver in drivers"
+          :key="driver"
+          :value="driver"
+        >
+          {{ $t(`form.${driver}`) }}
+        </option>
       </select>
     </div>
 
@@ -59,25 +73,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const amount = ref('1.00');
-const paySystem = ref('liqpay');
+const paySystem = ref('');
+const currency = ref('USD');
+const drivers = ref([]);
 const router = useRouter();
 
-onMounted(() => {
+onMounted(async () => {
   const token = localStorage.getItem('access_token');
   if (!token) {
     router.replace('/login?no-auth=1');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/payments');
+    const data = await res.json();
+    drivers.value = data.drivers || [];
+    paySystem.value = data.default || '';
+  } catch (e) {
+    console.error('Failed to load payment drivers', e);
   }
 });
+
+watch(paySystem, (val) => {
+  currency.value = (val === 'liqpay') ? 'UAH' : 'USD';
+}, { immediate: true });
 
 const handleSubmit = async () => {
   //const orderId = `ORD-${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14)}-${Math.random().toString(36).slice(2, 10)}`;
   const orderId = null;
 
-  const response = await fetch('/api/payments', {
+  const response = await fetch('/api/payments/create', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -86,6 +116,7 @@ const handleSubmit = async () => {
     body: JSON.stringify({
       amount: amount.value,
       pay_system: paySystem.value,
+      currency: currency.value,
       order_id: orderId
     })
   });
@@ -93,36 +124,33 @@ const handleSubmit = async () => {
   const result = await response.json();
 
   const payment = result?.payment;
-  if (payment?.action && payment?.data && payment?.signature) {
+if (payment?.action && payment?.method && typeof payment?.data === 'object') {
     if (result?.orderId) {
       localStorage.setItem('order_id', result.orderId);
     }
+
     const form = document.createElement('form');
-    form.method = 'POST';
+    form.method = payment.method || 'POST';
     form.action = payment.action;
     form.acceptCharset = 'utf-8';
 
-    const dataInput = document.createElement('input');
-    dataInput.type = 'hidden';
-    dataInput.name = 'data';
-    dataInput.value = payment.data;
-    form.appendChild(dataInput);
-
-    const signatureInput = document.createElement('input');
-    signatureInput.type = 'hidden';
-    signatureInput.name = 'signature';
-    signatureInput.value = payment.signature;
-    form.appendChild(signatureInput);
+    for (const [key, value] of Object.entries(payment.data)) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
+    }
 
     document.body.appendChild(form);
     form.submit();
   } else {
-    let msg = 'Payment initialization failed. ';
+    let msg = 'Payment initialization failed.';
     if (result?.name) {
-      msg += `\n${result.name}: `;
+      msg += `\n${result.name}:`;
     }
     if (result?.message) {
-      msg += result.message;
+      msg += ` ${result.message}`;
     }
     alert(msg);
   }
