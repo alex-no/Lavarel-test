@@ -113,8 +113,9 @@ class PaymentController extends Controller
             $orderId = 'ORD-' . now()->format('Ymd-His') . '-' . Str::random(6);
 
             $order = Order::create([
-                'user_id'     => $user->id,
-                'order_id'    => $orderId,
+                'user_id'  => $user->id,
+                'order_id' => $orderId,
+                'amount'   => $request->amount,
             ]);
         } else {
             $order = Order::where('order_id', $orderId)->first();
