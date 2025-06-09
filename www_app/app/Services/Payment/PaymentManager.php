@@ -2,7 +2,6 @@
 namespace App\Services\Payment;
 
 use App\Services\Payment\PaymentInterface;
-use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 
 class PaymentManager
@@ -11,7 +10,7 @@ class PaymentManager
      * Returns the payment driver instance.
      * This method provides access to the payment driver that has been initialized.
      * @param string $driverName
-     * @return PaymentInterface
+     * @return PaymentInterface The payment driver instance.
      *
      * @throws InvalidArgumentException|BindingResolutionException
      */
