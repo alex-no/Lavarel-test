@@ -20,7 +20,7 @@ return [
                 'publicKey'   => env('LIQPAY_PUBLIC_KEY'),
                 'privateKey'  => env('LIQPAY_PRIVATE_KEY'),
                 'callbackUrl' => env('CURRENT_URL') . '/api/payments/handle',
-                'resultUrl'   => env('CURRENT_URL') . '/api/payments/result',
+                'resultUrl'   => env('CURRENT_URL') . '/html/payment-result',
             ],
         ],
     ],
