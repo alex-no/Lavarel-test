@@ -72,12 +72,15 @@ class LiqPayDriver implements PaymentInterface
      */
     public function handleCallback(array $post): ?Order
     {
+Log:info("LiqPay callback received", $post);
         if (empty($post['data']) || empty($post['signature'])) {
             throw new BadRequestHttpException("Missing data or signature.");
         }
+Log:info("Is data and signature available");
         if (!$this->verifySignature($post['data'], $post['signature'])) {
             throw new BadRequestHttpException("Invalid signature.");
         }
+Log:info("Is data and signature valid");
 
         $data = json_decode(base64_decode($post['data']), true);
 
@@ -87,11 +90,13 @@ class LiqPayDriver implements PaymentInterface
         if (!$orderId || !$status) {
             throw new BadRequestHttpException("Invalid callback data.");
         }
+Log:info("Is orderId and status.");
 
         $order = Order::findOne(['order_id' => $orderId]);
         if (!$order) {
             return null; // Order not found
         }
+Log:info("Is order model.");
         $order->payment_status = $status;
 
         return $order;

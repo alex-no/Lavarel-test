@@ -194,6 +194,8 @@ class PaymentController extends Controller
     public function handle(string $driverName): \Illuminate\Http\JsonResponse
     {
         $post = request()->post();
+Log::info("Payment callback received for driver: $driverName", $post);
+
         if (empty($post)) {
             throw new BadRequestHttpException("Missing POST-data.");
         }
@@ -207,6 +209,7 @@ class PaymentController extends Controller
 
         $order->paid_at = $order->payment_status === 'success' ? now() : null;
         $order->save();
+Log:info("Order model saved.");
 
         Log::info("Payment callback received for order #$order->order_id with status: $order->status");
 
