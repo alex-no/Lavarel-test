@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->string('order_id', 64)->unique()->comment('Public order ID for external use');
             $table->decimal('amount', 10, 2)->comment('Payment amount');
             $table->string('currency', 3)->default('UAH')->comment('Currency code');
-            $table->enum('payment_status', ['pending', 'success', 'fail', 'cancel', 'refund', 'expired'])
+            $table->enum('payment_status', ['pending', 'success', 'fail', 'cancel', 'refund', 'expired', 'reverse', 'unknown'])
                 ->default('pending')
                 ->comment('Payment status');
             $table->string('description', 255)->nullable()->comment('Order description');
