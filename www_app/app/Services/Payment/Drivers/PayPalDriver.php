@@ -97,7 +97,7 @@ Log::info("Is data available");
         }
 Log::info("Is orderId and status.");
 
-        $order = Order::findOne(['order_id' => $orderId]);
+        $order = Order::where('order_id', $orderId)->first();
         if (!$order) {
             return null; // Order not found
         }
