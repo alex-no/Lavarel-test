@@ -80,11 +80,9 @@ class PayPalDriver implements PaymentInterface
      */
     public function handleCallback(array $post): ?Order
     {
-Log::info("LiqPay callback received", $post);
         if (!isset($post['txn_id'])) {
             return null;
         }
-Log::info("Is data available");
 
         $orderId = $post['custom'] ?? null;
         $status = strtolower($post['payment_status']) ?? null;
@@ -95,13 +93,11 @@ Log::info("Is data available");
         if (!$orderId || !$status) {
             throw new BadRequestHttpException("Invalid callback data.");
         }
-Log::info("Is orderId and status.");
 
         $order = Order::where('order_id', $orderId)->first();
         if (!$order) {
             return null; // Order not found
         }
-Log::info("Is order model.");
         $order->payment_status = array_key_exists($status, self::STATUS_MAP) ? self::STATUS_MAP[$status] : 'unknown';
 
         return $order;
