@@ -3,6 +3,7 @@ namespace App\Services\Payment\Drivers;
 
 use App\Services\Payment\PaymentInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 
 class PayPalDriver implements PaymentInterface
@@ -79,9 +80,11 @@ class PayPalDriver implements PaymentInterface
      */
     public function handleCallback(array $post): ?Order
     {
+Log::info("LiqPay callback received", $post);
         if (!isset($post['txn_id'])) {
             return null;
         }
+Log::info("Is data available");
 
         $orderId = $post['custom'] ?? null;
         $status = strtolower($post['payment_status']) ?? null;
@@ -92,11 +95,13 @@ class PayPalDriver implements PaymentInterface
         if (!$orderId || !$status) {
             throw new BadRequestHttpException("Invalid callback data.");
         }
+Log::info("Is orderId and status.");
 
         $order = Order::findOne(['order_id' => $orderId]);
         if (!$order) {
             return null; // Order not found
         }
+Log::info("Is order model.");
         $order->payment_status = array_key_exists($status, self::STATUS_MAP) ? self::STATUS_MAP[$status] : 'unknown';
 
         return $order;

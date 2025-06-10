@@ -209,7 +209,7 @@ Log::info("Payment callback received for driver: $driverName", $post);
 
         $order->paid_at = $order->payment_status === 'success' ? now() : null;
         $order->save();
-Log:info("Order model saved.");
+Log::info("Order model saved.");
 
         Log::info("Payment callback received for order #$order->order_id with status: $order->status");
 
