@@ -143,6 +143,7 @@ if (payment?.action && payment?.method && typeof payment?.data === 'object') {
     }
 
     document.body.appendChild(form);
+alert(form.outerHTML);    
     form.submit();
   } else {
     let msg = 'Payment initialization failed.';
