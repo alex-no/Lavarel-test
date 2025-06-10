@@ -72,7 +72,7 @@ Route::apiResource('/pet-owners', PetOwnerController::class);
 Route::prefix('payments')->controller(PaymentController::class)->group(function () {
     Route::get('/', 'drivers');
     Route::post('/create', 'create');
-    Route::post('/handle', 'handle');
+    Route::post('payments/handle/{driverName}', [PaymentController::class, 'handle'])->where('driverName', '[\w\-]+');
     Route::get('/result', 'result');
 });
 

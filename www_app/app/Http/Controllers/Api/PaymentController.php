@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 /**
  * PaymentController class for working with Payment models.
@@ -152,15 +155,26 @@ class PaymentController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/payments/handle",
+     *     path="/api/payments/handle{driverName}",
      *     summary="API Payments Handle",
      *     description="Returns information about Handle Payments.",
      *     tags={"Payment"},
+     *     @OA\Parameter(
+     *         name="driverName",
+     *         in="path",
+     *         description="Payment driver name",
+     *         required=true,
+     *         @OA\Schema(type="string", example="paypal")
+     *     ),
      *     @OA\RequestBody(
      *         required=true,
-     *         @OA\JsonContent(
-     *             @OA\Property(property="data", type="object", example="{data: 'example_data'}"),
-     *             @OA\Property(property="signature", type="string", example="c2lnbmF0dXJlX2V4YW1wbGU=")
+     *         description="Raw POST data, varies depending on payment driver",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 additionalProperties=true
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -177,35 +191,24 @@ class PaymentController extends Controller
      *     )
      * )
      */
-    public function handle(Request $request): \Illuminate\Http\JsonResponse
+    public function handle(string $driverName): \Illuminate\Http\JsonResponse
     {
-        $request->validate([
-            'data' => 'required|array',
-            'signature' => 'required|string',
-        ]);
-
-        $driver = app('payment')->getDriver();
-
-        if (!$driver->verifySignature($request->input('data'), $request->input('signature'))) {
-            throw ValidationException::withMessages(['signature' => 'Invalid signature.']);
+        $post = request()->post();
+        if (empty($post)) {
+            throw new BadRequestHttpException("Missing POST-data.");
         }
 
-        $data = $driver->handleCallback($request->all());
+        $driver = app('payment')->getDriver($driverName);
 
-        $orderId = $data['order_id'] ?? null;
-        $status = $data['status'] ?? null;
-
-        if (!$orderId || !$status) {
-            throw ValidationException::withMessages(['data' => 'Invalid callback data.']);
+        $order = $driver->handleCallback($post);
+        if (!$order) {
+            throw new ModelNotFoundException("Order not found.");
         }
 
-        $order = Order::where('order_id', $orderId)->firstOrFail();
-        $order->update([
-            'payment_status' => $status,
-            'paid_at' => $status === 'success' ? now() : null,
-        ]);
+        $order->paid_at = $order->payment_status === 'success' ? now() : null;
+        $order->save();
 
-        Log::info("Payment callback received for order #$orderId with status: $status");
+        Log::info("Payment callback received for order #$order->order_id with status: $order->status");
 
         return response()->json(['success' => true]);
     }

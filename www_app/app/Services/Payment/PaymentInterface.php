@@ -1,5 +1,6 @@
 <?php
 namespace App\Services\Payment;
+use App\Models\Order;
 
 interface PaymentInterface
 {
@@ -19,10 +20,10 @@ interface PaymentInterface
      * Handles the payment callback from the payment gateway.
      * This method should process the callback data,
      * verify the payment, and return the result.
-     * @param array $request
-     * @return array|null
+     * @param array $post
+     * @return Order|null
      */
-    public function handleCallback(array $request): ?array;
+    public function handleCallback(array $post): ?Order;
 
     /**
      * Verifies the signature of the payment data.

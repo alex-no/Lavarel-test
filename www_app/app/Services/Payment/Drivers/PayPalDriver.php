@@ -2,6 +2,8 @@
 namespace App\Services\Payment\Drivers;
 
 use App\Services\Payment\PaymentInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use App\Models\Order;
 
 class PayPalDriver implements PaymentInterface
 {
@@ -9,6 +11,18 @@ class PayPalDriver implements PaymentInterface
     public const VERSION = '1.0.0';
     // public const PAYMENT_URL = 'https://www.paypal.com/cgi-bin/webscr';
     public const PAYMENT_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+
+    public const STATUS_MAP = [
+        'completed' => 'success',
+        'pending' => 'pending',
+        'failed' => 'fail',
+        'denied' => 'cancel',
+        'refunded' => 'refund',
+        'reversed' => 'reverse',
+        'canceled_reversal' => 'cancel',
+        'processed' => 'success',
+        'voided' => 'cancel',
+    ];
 
     /**
      * PayPalDriver constructor.
@@ -60,22 +74,32 @@ class PayPalDriver implements PaymentInterface
 
     /**
      * Handles PayPal IPN callback.
-     * @param array $request
-     * @return array|null
+     * @param array $post
+     * @return Order|null
      */
-    public function handleCallback(array $request): ?array
+    public function handleCallback(array $post): ?Order
     {
-        if (!isset($request['txn_id'])) {
+        if (!isset($post['txn_id'])) {
             return null;
         }
 
-        return [
-            'transaction_id' => $request['txn_id'],
-            'status'         => $request['payment_status'] ?? null,
-            'amount'         => $request['mc_gross'] ?? null,
-            'currency'       => $request['mc_currency'] ?? null,
-            'order_id'       => $request['custom'] ?? null,
-        ];
+        $orderId = $post['custom'] ?? null;
+        $status = strtolower($post['payment_status']) ?? null;
+        //     'transaction_id' => $post['txn_id'],
+        //     'amount'         => $post['mc_gross'] ?? null,
+        //     'currency'       => $post['mc_currency'] ?? null,
+
+        if (!$orderId || !$status) {
+            throw new BadRequestHttpException("Invalid callback data.");
+        }
+
+        $order = Order::findOne(['order_id' => $orderId]);
+        if (!$order) {
+            return null; // Order not found
+        }
+        $order->payment_status = array_key_exists($status, self::STATUS_MAP) ? self::STATUS_MAP[$status] : 'unknown';
+
+        return $order;
     }
 
     /**
