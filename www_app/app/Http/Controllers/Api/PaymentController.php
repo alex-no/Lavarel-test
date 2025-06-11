@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 /**
@@ -131,11 +132,16 @@ class PaymentController extends Controller
             if ($order->payment_status !== 'pending') {
                 throw ValidationException::withMessages(['order_id' => 'Order is not in a valid state for payment.']);
             }
+        }
 
-            $order->update(['amount' => $request->amount]);
-            $order->update(['currency' => $request->currency]);
-            $order->update(['pay_system' => $driverName]);
-            $order->update(['description' => 'Payment for Order #' . $orderId]);
+        $order->update([
+            'amount'      => $request->amount,
+            'currency'    => $request->currency,
+            'pay_system'  => $driverName,
+            'description' => 'Payment for Order #' . $orderId,
+        ]);
+        if (!$order->save()) {
+            throw new HttpException(500, "Failed to create order: " . implode(', ', $order->getFirstErrors()));
         }
 
         // Creating a payment via PaymentManager
