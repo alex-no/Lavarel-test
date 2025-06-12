@@ -35,6 +35,20 @@
 
       <Pagination :pagination="pagination" :meta="meta" :links="links" @load="loadPage" />
     </div>
+    <hr class="mt-5" />
+    
+    <div class="mb-2">
+      {{ $t('goto_swagger') }}
+      <a href="/api/documentation/#" target="_blank" class="link-primary ms-1">
+        {{ $t('here') }}
+      </a>.
+    </div>
+    <div class="mb-2">
+      {{ $t('goto_github') }}
+      <a href="https://github.com/alex-no/Lavarel-test" target="_blank" class="link-primary ms-1">
+        {{ $t('here') }}
+      </a>.
+    </div>
   </div>
 </template>
 
