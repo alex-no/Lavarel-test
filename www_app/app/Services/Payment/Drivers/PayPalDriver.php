@@ -2,10 +2,9 @@
 namespace App\Services\Payment\Drivers;
 
 use App\Services\Payment\PaymentInterface;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Illuminate\Support\Facades\Log;
 use App\Models\Order;
-use App\web\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Illuminate\Support\Facades\Request;
 
 class PayPalDriver implements PaymentInterface
 {
@@ -81,7 +80,7 @@ class PayPalDriver implements PaymentInterface
      */
     public function getCallbackData(): array
     {
-        $data = Yii::$app->request->post();
+        $data = request()->all();
         if (empty($data)) {
             throw new BadRequestHttpException("Empty PayPal callback data.");
         }
@@ -91,8 +90,9 @@ class PayPalDriver implements PaymentInterface
     /**
      * Handles PayPal IPN callback.
      *
-     * @param array $post
+     * @param array $data
      * @return array ['status' => string, 'order' => ?Order]
+     * @throws BadRequestHttpException
      */
     public function handleCallback(array $data): array
     {
@@ -101,14 +101,13 @@ class PayPalDriver implements PaymentInterface
         }
 
         $orderId = $data['custom'] ?? null;
-        $status  = strtolower($data['payment_status'] ?? '');
-
+        $status = strtolower($data['payment_status'] ?? '');
 
         if (!$orderId || !$status) {
             throw new BadRequestHttpException("Invalid PayPal callback data.");
         }
 
-        $order = Order::findOne(['order_id' => $orderId]);
+        $order = Order::firstWhere('order_id', $orderId);
         if (!$order) {
             return ['status' => 'not_found', 'order' => null];
         }
@@ -121,6 +120,7 @@ class PayPalDriver implements PaymentInterface
     /**
      * Verifies the IPN signature (simulated here).
      * Real implementation should call back to PayPal to verify IPN.
+     *
      * @param string $data
      * @param string $signature
      * @return bool

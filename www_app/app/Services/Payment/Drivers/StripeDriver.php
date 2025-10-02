@@ -1,13 +1,15 @@
 <?php
 namespace App\Services\Payment\Drivers;
 
-use Yii;
 use App\Services\Payment\PaymentInterface;
-use app\models\Order;
+use App\Models\Order;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Request;
 use Stripe\Stripe;
 use Stripe\Webhook;
 use Stripe\Checkout\Session;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Stripe\Exception\SignatureVerificationException;
 
 /**
  * Stripe payment driver implementing PaymentInterface.
@@ -53,10 +55,10 @@ class StripeDriver implements PaymentInterface
      */
     public function createPayment(array $params): array
     {
-        $amount      = $params['amount'] ?? null;
-        $currency    = strtolower($params['currency'] ?? 'USD');
+        $amount = $params['amount'] ?? null;
+        $currency = strtolower($params['currency'] ?? 'USD');
         $description = $params['description'] ?? 'Payment';
-        $orderId     = $params['order_id'] ?? null;
+        $orderId = $params['order_id'] ?? null;
 
         if (!$amount || !$orderId) {
             throw new BadRequestHttpException("Missing required parameters: amount or order_id.");
@@ -68,23 +70,23 @@ class StripeDriver implements PaymentInterface
                 'mode' => 'payment',
                 'line_items' => [[
                     'price_data' => [
-                        'currency'     => $currency,
+                        'currency' => $currency,
                         'product_data' => ['name' => $description],
-                        'unit_amount'  => (int) round($amount * 100),
+                        'unit_amount' => (int) round($amount * 100),
                     ],
                     'quantity' => 1,
                 ]],
                 'metadata' => [
-                    'order_id' => (string)$orderId,
+                    'order_id' => (string) $orderId,
                 ],
                 'success_url' => $this->returnUrl . '?orderId=' . $orderId,
-                'cancel_url'  => $this->cancelUrl . '?orderId=' . $orderId,
+                'cancel_url' => $this->cancelUrl . '?orderId=' . $orderId,
             ]);
 
             return [
-                'action' => $session->url,  // URL for redirect to Stripe Checkout
+                'action' => $session->url, // URL for redirect to Stripe Checkout
                 'method' => 'REDIRECT',
-                'data'   => [],
+                'data' => [],
             ];
         } catch (\Exception $e) {
             throw new BadRequestHttpException("Failed to create Stripe checkout session: " . $e->getMessage());
@@ -92,22 +94,22 @@ class StripeDriver implements PaymentInterface
     }
 
     /**
-     * Collects callback data from Yii request for Stripe webhook.
+     * Collects callback data from Laravel request for Stripe webhook.
      *
      * @return array ['payload' => string, 'signature' => string]
      * @throws BadRequestHttpException
      */
     public function getCallbackData(): array
     {
-        $payload   = Yii::$app->request->rawBody;
-        $signature = Yii::$app->request->headers->get('Stripe-Signature');
+        $payload = request()->getContent();
+        $signature = request()->header('Stripe-Signature');
 
         if (empty($payload) || empty($signature)) {
             throw new BadRequestHttpException("Invalid Stripe callback: missing payload or signature.");
         }
 
         return [
-            'payload'   => $payload,
+            'payload' => $payload,
             'signature' => $signature,
         ];
     }
@@ -121,7 +123,7 @@ class StripeDriver implements PaymentInterface
      */
     public function handleCallback(array $data): array
     {
-        $payload   = $data['payload']   ?? null;
+        $payload = $data['payload'] ?? null;
         $signature = $data['signature'] ?? null;
 
         if (!$payload || !$signature) {
@@ -139,24 +141,23 @@ class StripeDriver implements PaymentInterface
                 case 'payment_intent.succeeded':
                     $orderId = $this->getOrderId($event);
                     if (!$orderId) {
-                        Yii::info("PaymentIntent succeeded, but no order_id in metadata - possibly not from Checkout or test event.");
-                        return ['status' => 'ignored'];
+                        Log::info("PaymentIntent succeeded, but no order_id in metadata - possibly not from Checkout or test event.", ['method' => __METHOD__]);
+                        return ['status' => 'ignored', 'order' => null];
                     }
                     break;
 
                 default:
-                    return ['status' => 'ignored'];
+                    return ['status' => 'ignored', 'order' => null];
             }
 
-            $order = Order::findOne(['order_id' => $orderId]);
+            $order = Order::firstWhere('order_id', $orderId);
             if (!$order) {
-                Yii::warning("Order with ID {$orderId} not found for Stripe webhook.");
-                return ['status' => 'not_found'];
+                Log::warning("Order with ID {$orderId} not found for Stripe webhook.", ['method' => __METHOD__]);
+                return ['status' => 'not_found', 'order' => null];
             }
 
             $order->payment_status = 'success';
             return ['status' => 'processed', 'order' => $order];
-
         } catch (SignatureVerificationException $e) {
             throw new BadRequestHttpException("Invalid signature: " . $e->getMessage());
         } catch (\Throwable $e) {
@@ -166,12 +167,13 @@ class StripeDriver implements PaymentInterface
 
     /**
      * Extracts order ID from the Stripe event object.
+     *
      * @param \Stripe\Event $event
      * @return string|null
      */
     public function getOrderId($event): ?string
     {
-        $object = $event->data->object; // PaymentIntent
+        $object = $event->data->object; // PaymentIntent or Checkout Session
         return $object->metadata->order_id ?? null;
     }
 

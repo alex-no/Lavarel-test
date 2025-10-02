@@ -1,7 +1,8 @@
 <?php
+
 namespace App\Services\Payment;
 
-use App\Services\Payment\PaymentInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use InvalidArgumentException;
 
 class PaymentManager
@@ -9,12 +10,13 @@ class PaymentManager
     /**
      * Returns the payment driver instance.
      * This method provides access to the payment driver that has been initialized.
+     *
      * @param string $driverName
      * @return PaymentInterface The payment driver instance.
      *
      * @throws InvalidArgumentException|BindingResolutionException
      */
-    public function getDriver($driverName): PaymentInterface
+    public function getDriver(string $driverName): PaymentInterface
     {
         $drivers = config('payment.drivers', []);
 
@@ -24,8 +26,8 @@ class PaymentManager
 
         $driverClass = $drivers[$driverName]['class'];
         $driverConfig = $drivers[$driverName]['config'] ?? [];
-        $driver = app()->make($driverClass, ...array_values($driverConfig));
-        //$driver = app()->make($driverClass, $driverConfig);
+
+        $driver = app()->make($driverClass, $driverConfig);
         return $driver;
     }
 }

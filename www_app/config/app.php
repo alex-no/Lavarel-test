@@ -106,6 +106,13 @@ return [
         ),
     ],
 
+    'providers' => [
+        App\Providers\PaymentServiceProvider::class,
+    ],
+    'aliases' => [
+        'Payment' => App\Services\Payment\PaymentManager::class,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
