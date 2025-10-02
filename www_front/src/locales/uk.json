@@ -7,7 +7,12 @@
     "features": "План розробки",
     "login": "Логін",
     "payment": "Здійснити платіж",
-    "payment_result": "Результат платежу"
+    "payment_result": "Результат платежу",
+    "chat_demo": "Демонстраційний чат",
+    "chat_demo_note": "для перевірки роботи WebSocket"
+  },
+  "label": {
+    "users": "Користувачі"
   },
   "featureTitle": "План розробки",
   "pageLoading": "Завантаження",
@@ -37,6 +42,7 @@
 
     "paypal": "PayPal",
     "liqpay": "LiqPay",
+    "stripe": "Stripe",
 
     "make_payment": "Здійснити платіж",
     "amount": "Сума",
@@ -47,7 +53,10 @@
     "payment_result": "Результат платежу",
     "order_id": "ID замовлення",
     "status": "Статус",
-    "another_payment": "Здійснити інший платіж"
+    "another_payment": "Здійснити інший платіж",
+
+    "send": "Надіслати",
+    "type_message": "Напишіть ваше повідомлення тут"
   },
   "payment_status": {
     "pending": "Очікується",

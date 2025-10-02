@@ -5,6 +5,7 @@ use App\Services\Payment\PaymentInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Illuminate\Support\Facades\Log;
 use App\Models\Order;
+use App\web\BadRequestHttpException;
 
 class PayPalDriver implements PaymentInterface
 {
@@ -12,7 +13,6 @@ class PayPalDriver implements PaymentInterface
     public const VERSION = '1.0.0';
     // public const PAYMENT_URL = 'https://www.paypal.com/cgi-bin/webscr';
     public const PAYMENT_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
-
     public const STATUS_MAP = [
         'completed' => 'success',
         'pending' => 'pending',
@@ -74,33 +74,48 @@ class PayPalDriver implements PaymentInterface
     }
 
     /**
-     * Handles PayPal IPN callback.
-     * @param array $post
-     * @return Order|null
+     * Collects callback data from Laravel request for PayPal IPN.
+     *
+     * @return array
+     * @throws BadRequestHttpException
      */
-    public function handleCallback(array $post): ?Order
+    public function getCallbackData(): array
     {
-        if (!isset($post['txn_id'])) {
-            return null;
+        $data = Yii::$app->request->post();
+        if (empty($data)) {
+            throw new BadRequestHttpException("Empty PayPal callback data.");
+        }
+        return $data;
+    }
+
+    /**
+     * Handles PayPal IPN callback.
+     *
+     * @param array $post
+     * @return array ['status' => string, 'order' => ?Order]
+     */
+    public function handleCallback(array $data): array
+    {
+        if (!isset($data['txn_id'])) {
+            return ['status' => 'ignored', 'order' => null];
         }
 
-        $orderId = $post['custom'] ?? null;
-        $status = strtolower($post['payment_status']) ?? null;
-        //     'transaction_id' => $post['txn_id'],
-        //     'amount'         => $post['mc_gross'] ?? null,
-        //     'currency'       => $post['mc_currency'] ?? null,
+        $orderId = $data['custom'] ?? null;
+        $status  = strtolower($data['payment_status'] ?? '');
+
 
         if (!$orderId || !$status) {
-            throw new BadRequestHttpException("Invalid callback data.");
+            throw new BadRequestHttpException("Invalid PayPal callback data.");
         }
 
-        $order = Order::where('order_id', $orderId)->first();
+        $order = Order::findOne(['order_id' => $orderId]);
         if (!$order) {
-            return null; // Order not found
+            return ['status' => 'not_found', 'order' => null];
         }
-        $order->payment_status = array_key_exists($status, self::STATUS_MAP) ? self::STATUS_MAP[$status] : 'unknown';
 
-        return $order;
+        $order->payment_status = self::STATUS_MAP[$status] ?? 'unknown';
+
+        return ['status' => 'processed', 'order' => $order];
     }
 
     /**

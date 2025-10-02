@@ -71,6 +71,8 @@ class PaymentController extends Controller
     }
 
     /**
+     * Creates a payment for the given order and driver.
+     *
      * @OA\Post(
      *     path="/api/payments/create",
      *     security={{"bearerAuth":{}}},
@@ -78,16 +80,17 @@ class PaymentController extends Controller
      *     description="Returns information about New Payment.",
      *     tags={"Payment"},
      *     @OA\RequestBody(
+     *         required=true,
      *         @OA\JsonContent(
-     *             required={"amount", "pay_system"},
+     *             required={"amount", "driver", "orderId"},
      *             @OA\Property(property="amount", type="string", example="100.00"),
-     *             @OA\Property(property="pay_system", type="string", example="lyqpay"),
-     *             @OA\Property(property="order_id", type="string", example="ORD-20250529-045325-abcd1234")
+     *             @OA\Property(property="driver", type="string", example="stripe"),
+     *             @OA\Property(property="orderId", type="string", example="ORD-12345")
      *         )
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Created new payment",
+     *         description="Payment created successfully",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="success", type="boolean", example=true),
@@ -96,9 +99,13 @@ class PaymentController extends Controller
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Validation error"
+     *         description="Invalid request"
      *     )
      * )
+     *
+     * @param Request $request
+     * @return array<string,mixed>
+     * @throws BadRequestHttpException
      */
     public function create(Request $request): \Illuminate\Http\JsonResponse
     {
@@ -160,17 +167,19 @@ class PaymentController extends Controller
     }
 
     /**
+     * Handles the callback from payment providers.
+     *
      * @OA\Post(
-     *     path="/api/payments/handle{driverName}",
-     *     summary="API Payments Handle",
-     *     description="Returns information about Handle Payments.",
+     *     path="/api/payments/handle/{driverName}",
+     *     summary="Handle payment provider callback",
+     *     description="Processes the callback sent by a payment provider (e.g., Stripe, PayPal, LiqPay).",
      *     tags={"Payment"},
      *     @OA\Parameter(
      *         name="driverName",
      *         in="path",
      *         description="Payment driver name",
      *         required=true,
-     *         @OA\Schema(type="string", example="paypal")
+     *         @OA\Schema(type="string", example="stripe")
      *     ),
      *     @OA\RequestBody(
      *         required=true,
@@ -185,7 +194,7 @@ class PaymentController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Updated",
+     *         description="Callback processed successfully",
      *         @OA\JsonContent(
      *             type="object",
      *             @OA\Property(property="success", type="boolean", example=true)
@@ -193,30 +202,48 @@ class PaymentController extends Controller
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Validation error"
+     *         description="Invalid request"
      *     )
      * )
+     *
+     * @param string $driverName
+     * @return array<string,mixed>
+     * @throws BadRequestHttpException
+     * @throws ServerErrorHttpException
      */
-    public function handle(string $driverName): \Illuminate\Http\JsonResponse
+    public function handle(string $driverName): array
     {
-        $post = request()->post();
-
-        if (empty($post)) {
-            throw new BadRequestHttpException("Missing POST-data.");
+        if (empty($driverName)) {
+            throw new BadRequestHttpException('Missing $driverName.');
         }
 
         $driver = app('payment')->getDriver($driverName);
+        $data   = $driver->getCallbackData();
 
-        $order = $driver->handleCallback($post);
-        if (!$order) {
-            throw new ModelNotFoundException("Order not found.");
+        $result = $driver->handleCallback($data);
+
+        switch ($result['status']) {
+            case 'processed':
+                /** @var \app\models\Order $order */
+                $order = $result['order'];
+                $order->paid_at = $order->payment_status === 'success' ? date('Y-m-d H:i:s') : null;
+                $order->save(false); // disable validation, can be replaced with a transaction
+
+                Log::info("Payment callback processed for order #{$order->order_id} with status: {$order->payment_status}", __METHOD__);
+                return ['success' => true];
+
+            case 'ignored':
+                Log::info("Payment callback ignored (event type not relevant)", __METHOD__);
+                return ['success' => true, 'message' => 'Event ignored'];
+
+            case 'not_found':
+                Log::warning("Payment callback: order not found", __METHOD__);
+                return ['success' => false, 'message' => 'Order not found'];
+
+            default:
+                Log::warning("Payment callback returned unexpected status: {$result['status']}", __METHOD__);
+                return ['success' => false, 'message' => 'Unexpected status'];
         }
-
-        $order->paid_at = $order->payment_status === 'success' ? now() : null;
-        $order->save();
-        Log::info("Payment callback received for order #$order->order_id with status: $order->status");
-
-        return response()->json(['success' => true]);
     }
 
     /**

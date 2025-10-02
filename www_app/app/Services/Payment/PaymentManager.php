@@ -24,7 +24,8 @@ class PaymentManager
 
         $driverClass = $drivers[$driverName]['class'];
         $driverConfig = $drivers[$driverName]['config'] ?? [];
-
-        return app()->make($driverClass, $driverConfig);
+        $driver = app()->make($driverClass, ...array_values($driverConfig));
+        //$driver = app()->make($driverClass, $driverConfig);
+        return $driver;
     }
 }
